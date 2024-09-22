@@ -1,4 +1,4 @@
-# 🖥️ BlogSpace
+# 🖌️ Color Scheme Generator
 
 Live: https://color-scheme-generator-liart.vercel.app/
 
