@@ -1,6 +1,6 @@
 # 🖌️ Color Scheme Generator
 
-Live: https://color-scheme-generator-liart.vercel.app/
+**Live: https://color-scheme-generator-liart.vercel.app/**
 
 ***A website to generate Color Schemes based on selection by user and other options for shades. It uses [Color API](https://www.thecolorapi.com/) to provide user with color schemes.***
 
