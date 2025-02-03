@@ -1,28 +1,35 @@
-<html>
-    <head>
-        <link rel="stylesheet" href="index.css">
-        <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
-    </head>
-    <body>
-        <h1>Color Scheme Generator</h1>
-        <main>
-            <div class="container">
-              <div class="select-color">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Scheme Generator</title>
+    <link rel="icon" href="./assets/color-palette.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="controls">
+            <div class="control-wrapper">
                 <input id="input-color" type="color">
-                <select id="color-select">
+                <select id="color-select" class="select">
                     <option value="monochrome">Monochrome</option>
-                    <option value="monochrome-dark">Monochrome-dark</option>
-                    <option value="monochrome-light">Monochrome-light</option>
+                    <option value="monochrome-dark">Monochrome Dark</option>
+                    <option value="monochrome-light">Monochrome Light</option>
                     <option value="analogic">Analogic</option>
                     <option value="complement">Complement</option>
-                    <option value="analogic-complement">Analogic-complement</option>
+                    <option value="analogic-complement">Analogic Complement</option>
                     <option value="triad">Triad</option>
                 </select>
-                <button id="color-btn">Get Color Scheme</button>
+                <button id="color-btn" class="btn">Generate</button>
             </div>
-             <div class="colors"></div>
-            </div>
-        </main>
-        <script src="index.js"></script>
-    </body>
-</html> 
+        </div>
+        <div class="colors-container">
+            <div class="colors"></div>
+        </div>
+    </div>
+    <div class="toast" id="copyToast"></div>
+    <script src="index.js"></script>
+</body>
+</html>
