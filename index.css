@@ -171,17 +171,13 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 @media (max-width: 768px) {
-    .control-wrapper {
-        flex-direction: column;
-    }
-
     .select, .btn {
         width: max-content;
     }
 
     input[type="color"] {
         width: 150px;
-        height: 5rem;
+        height: 3rem;
     }
 
     .colors {
