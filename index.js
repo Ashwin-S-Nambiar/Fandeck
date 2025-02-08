@@ -92,3 +92,29 @@ function setTextColor(element) {
 
 // Initialize with random colors
 colorBtn.click()
+
+const shareBtn = document.getElementById("share-btn");
+
+shareBtn.addEventListener("click", () => {
+    if (colorsArr.length === 0) {
+        showToast("Generate a palette first!");
+        return;
+    }
+
+    const hexValues = colorsArr.map(color => color.hex.replace("#", "")).join("-");
+    const shareURL = `${window.location.origin}${window.location.pathname}?palette=${hexValues}`;
+
+    navigator.clipboard.writeText(shareURL)
+        .then(() => showToast("Palette link copied!"))
+        .catch(() => showToast("Failed to copy link"));
+});
+
+// Read palette from URL and display it
+const urlParams = new URLSearchParams(window.location.search);
+const paletteParam = urlParams.get("palette");
+
+if (paletteParam) {
+    const hexColors = paletteParam.split("-").map(hex => `#${hex}`);
+    colorsArr = hexColors.map(hex => ({ hex, name: "" }));
+    renderData(colorsArr);
+}
