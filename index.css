@@ -101,6 +101,17 @@ input[type="color"]::-webkit-color-swatch {
     transform: translateY(-4px);
 }
 
+#share-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: hsl(280, 100%, 50%);
+}
+
+#share-btn:hover {
+    background-color: hsl(280, 100%, 40%);
+}
+
 .colors-container {
     flex: 1;
     margin-top: 5rem;
@@ -172,7 +183,7 @@ input[type="color"]::-webkit-color-swatch {
 
 @media (max-width: 768px) {
     .control-wrapper {
-        flex-direction: column;
+        gap: 0.5rem;
     }
 
     .select, .btn {
@@ -181,7 +192,7 @@ input[type="color"]::-webkit-color-swatch {
 
     input[type="color"] {
         width: 150px;
-        height: 5rem;
+        height: 3rem;
     }
 
     .colors {
@@ -194,5 +205,26 @@ input[type="color"]::-webkit-color-swatch {
 
     .color-block:hover {
         height: 25vh;
+    }
+}
+
+@media (max-width: 575px) {
+    input[type="color"] {
+        width: 80px;
+        min-width: 50px;
+    }
+
+    .select, .btn {
+        width: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .select, .btn {
+        width: 90px;
+    }
+
+    .btn > svg {
+        display: none;
     }
 }
