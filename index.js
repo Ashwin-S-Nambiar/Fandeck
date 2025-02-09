@@ -90,9 +90,6 @@ function setTextColor(element) {
   element.querySelector(".color-info").style.textShadow = textColor === "white" ? "0 1px 3px rgba(0,0,0,0.3)" : "none"
 }
 
-// Initialize with random colors
-colorBtn.click()
-
 const shareBtn = document.getElementById("share-btn");
 
 shareBtn.addEventListener("click", () => {
@@ -117,4 +114,7 @@ if (paletteParam) {
     const hexColors = paletteParam.split("-").map(hex => `#${hex}`);
     colorsArr = hexColors.map(hex => ({ hex, name: "" }));
     renderData(colorsArr);
+} else {
+    // Initialize with random colors only if no shared palette exists
+    colorBtn.click();
 }
