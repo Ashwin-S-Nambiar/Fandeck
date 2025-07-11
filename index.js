@@ -3,14 +3,77 @@ const colorBtn = document.getElementById("color-btn")
 const colorSelect = document.getElementById("color-select")
 const colors = document.querySelector(".colors")
 const copyToast = document.getElementById("copyToast")
+const statusIndicator = document.getElementById("status-indicator")
+const statusText = document.getElementById("status-text")
+const apiStatusContainer = document.getElementById("api-status")
 
 let colorsArr = []
+let apiStatus = 'checking' // 'online', 'offline', 'checking'
+
+// Check API status on page load
+checkApiStatus()
+
+// Check API status every 5 minutes
+setInterval(checkApiStatus, 5 * 60 * 1000)
+
+async function checkApiStatus() {
+    try {
+        updateStatusDisplay('checking', 'Checking API...')
+        
+        // Test API connectivity
+        const response = await fetch('https://www.thecolorapi.com/scheme?hex=000000&mode=monochrome&count=1', {
+            method: 'GET',
+            timeout: 10000
+        })
+        
+        if (response.ok) {
+            apiStatus = 'online'
+            updateStatusDisplay('online', 'Color API is Up')
+        } else {
+            apiStatus = 'offline'
+            updateStatusDisplay('offline', 'Color API is Down')
+        }
+    } catch (error) {
+        apiStatus = 'offline'
+        updateStatusDisplay('offline', 'Color API is Down')
+        console.error('API status check failed:', error)
+    }
+}
+
+function updateStatusDisplay(status, text) {
+    statusIndicator.className = `status-indicator ${status}`
+    statusText.textContent = text
+    
+    // Update the API status container class for styling
+    apiStatusContainer.className = `api-status ${status}`
+    
+    // Update button state based on API status
+    if (status === 'offline') {
+        colorBtn.disabled = true
+        colorBtn.style.opacity = '0.5'
+        colorBtn.style.cursor = 'not-allowed'
+    } else if (status === 'online') {
+        colorBtn.disabled = false
+        colorBtn.style.opacity = ''
+        colorBtn.style.cursor = 'pointer'
+    }
+}
 
 colorBtn.addEventListener("click", () => {
+  if (apiStatus === 'offline') {
+    showToast("Color API is currently unavailable. Please try again later.")
+    return
+  }
+  
   const color = inputColor.value.slice(1, 7)
   const option = colorSelect.value
   fetch(`https://www.thecolorapi.com/scheme?hex=${color}&mode=${option}&count=5`)
-    .then((res) => res.json())
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`)
+      }
+      return res.json()
+    })
     .then((data) => {
       const dataColors = data.colors.map((color) => ({
         hex: color.hex.value,
@@ -18,10 +81,18 @@ colorBtn.addEventListener("click", () => {
       }))
       colorsArr = dataColors
       renderData(colorsArr)
+      
+      // Update API status to online if request was successful
+      if (apiStatus !== 'online') {
+        apiStatus = 'online'
+        updateStatusDisplay('online', 'Color API is Up')
+      }
     })
     .catch((error) => {
       console.error("Error fetching color scheme:", error)
-      showToast("Failed to fetch color scheme. Please try again.")
+      apiStatus = 'offline'
+      updateStatusDisplay('offline', 'Color API is Down')
+      showToast("Failed to fetch color scheme. API may be down.")
     })
 })
 
