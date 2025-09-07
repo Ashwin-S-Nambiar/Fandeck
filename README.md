@@ -119,7 +119,7 @@ Contributions are welcome! Here's how you can help improve the Color Scheme Gene
 ## 👨‍💻 Author
 
 ### Ashwin S Nambiar
-- Portfolio: [ashwin-s-nambiar.is-a.dev](https://ashwin-s-nambiar.is-a.dev/)
+- Portfolio: [ashwin.co.in](https://ashwin.co.in)
 - GitHub: [@Ashwin-S-Nambiar](https://github.com/Ashwin-S-Nambiar)
 
 ---
