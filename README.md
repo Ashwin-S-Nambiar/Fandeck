@@ -1,4 +1,4 @@
-# Color Scheme Generator 🎨
+# Color Scheme Generator
 
 <div align="center">
 
@@ -13,10 +13,10 @@ A sophisticated color scheme generator that creates beautiful, harmonious color 
 
 </div>
 
-## ✨ Features
+## Features
 
-- **🎨 Interactive Color Selection** - Choose your base color using an intuitive color picker
-- **🌈 Multiple Harmony Options** - Generate schemes in various modes:
+- **Interactive Color Selection** - Choose your base color using an intuitive color picker
+- **Multiple Harmony Options** - Generate schemes in various modes:
   - Monochrome
   - Monochrome Dark
   - Monochrome Light
@@ -24,12 +24,12 @@ A sophisticated color scheme generator that creates beautiful, harmonious color 
   - Complement
   - Analogic Complement
   - Triad
-- **⚡ One-Click Copy** - Instantly copy color codes with a simple click
-- **📌 Real-time Preview** - See your color scheme update instantly
-- **📱 Responsive Design** - Works seamlessly on all devices
-- **💎 Modern Interface** - Clean, intuitive design with smooth animations
+- **One-Click Copy** - Instantly copy color codes with a simple click
+- **Real-time Preview** - See your color scheme update instantly
+- **Responsive Design** - Works seamlessly on all devices
+- **Modern Interface** - Clean, intuitive design with smooth animations
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 - **HTML5** - Semantic structure
@@ -39,7 +39,7 @@ A sophisticated color scheme generator that creates beautiful, harmonious color 
 ### API
 - **[The Color API](https://www.thecolorapi.com/)** - Color scheme generation
 
-## 🚀 Installation & Setup
+## Installation & Setup
 
 1. **Clone the repository**
 
@@ -54,7 +54,7 @@ A sophisticated color scheme generator that creates beautiful, harmonious color 
 
 4. **No additional dependencies or setup required**
 
-## 📸 Screenshots
+## Screenshots
 
 <div align="center">
 
@@ -75,7 +75,7 @@ A sophisticated color scheme generator that creates beautiful, harmonious color 
 
 </div>
 
-## 🌐 Live
+## Live
 
 <div align="center">
 
@@ -83,7 +83,7 @@ A sophisticated color scheme generator that creates beautiful, harmonious color 
 
 </div>
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Here's how you can help improve the Color Scheme Generator:
 
@@ -108,7 +108,7 @@ Contributions are welcome! Here's how you can help improve the Color Scheme Gene
 
 5. Open a Pull Request
 
-## 🌟 Future Enhancements
+## Future Enhancements
 
 - Save favorite color schemes
 - Export palettes in different formats (CSS, SCSS, JSON)
@@ -116,7 +116,7 @@ Contributions are welcome! Here's how you can help improve the Color Scheme Gene
 - Color accessibility checking
 - Palette sharing functionality
 
-## 👨‍💻 Author
+## Author
 
 ### Ashwin S Nambiar
 - Portfolio: [ashwin.co.in](https://ashwin.co.in)
