@@ -14,7 +14,6 @@ A sophisticated color scheme generator that creates beautiful, harmonious color 
 </div>
 
 ## Features
-
 - **Interactive Color Selection** - Choose your base color using an intuitive color picker
 - **Multiple Harmony Options** - Generate schemes in various modes:
   - Monochrome
@@ -84,7 +83,6 @@ A sophisticated color scheme generator that creates beautiful, harmonious color 
 </div>
 
 ## Contributing
-
 Contributions are welcome! Here's how you can help improve the Color Scheme Generator:
 
 1. Fork the repository
@@ -109,18 +107,11 @@ Contributions are welcome! Here's how you can help improve the Color Scheme Gene
 5. Open a Pull Request
 
 ## Future Enhancements
-
 - Save favorite color schemes
 - Export palettes in different formats (CSS, SCSS, JSON)
 - Custom color harmony rules
 - Color accessibility checking
 - Palette sharing functionality
-
-## Author
-
-### Ashwin S Nambiar
-- Portfolio: [ashwin.co.in](https://ashwin.co.in)
-- GitHub: [@Ashwin-S-Nambiar](https://github.com/Ashwin-S-Nambiar)
 
 ---
 
