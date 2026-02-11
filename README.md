@@ -9,7 +9,7 @@
 
 A sophisticated color scheme generator that creates beautiful, harmonious color palettes based on user selection. Powered by the [Color API](https://www.thecolorapi.com/), it offers various color harmony options and instant color code copying for seamless integration into your projects.
 
-[Features](#-features) • [Tech Stack](#-tech-stack) • [Installation](#-installation--setup) • [Screenshots](#-screenshots) • [Live](#-live) • [Contributing](#-contributing) • [Author](#-author)
+[Features](#-features) • [Tech Stack](#-tech-stack) • [Installation](#-installation--setup) • [Screenshots](#-screenshots) • [Live](#-live) • [Contributing](#-contributing)
 
 </div>
 
@@ -78,7 +78,7 @@ A sophisticated color scheme generator that creates beautiful, harmonious color 
 
 <div align="center">
 
-[![Visit](https://img.shields.io/badge/Visit_Site-000?style=for-the-badge&logo=vercel&logoColor=white)](https://color-scheme-generator-liart.vercel.app/)
+[![Visit](https://img.shields.io/badge/Visit_Site-000?style=for-the-badge&logo=vercel&logoColor=white)](https://color-scheme-generator.ashwin.co.in)
 
 </div>
 
