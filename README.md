@@ -78,7 +78,7 @@ A sophisticated color scheme generator that creates beautiful, harmonious color 
 
 <div align="center">
 
-[![Visit](https://img.shields.io/badge/Visit_Site-000?style=for-the-badge&logo=vercel&logoColor=white)](https://color-scheme-generator.ashwin.co.in)
+[![Visit](https://img.shields.io/badge/Visit_Site-000?style=for-the-badge&logo=vercel&logoColor=white)](https://palette.ashwin.co.in)
 
 </div>
 
