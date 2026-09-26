@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#fafaf9" />
+    <meta name="robots" content="noindex" />
+    <title>Not found · Color Scheme Generator</title>
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preload" href="/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/geist-mono-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <script>
+      (() => {
+        let t = null;
+        try {
+          t = JSON.parse(localStorage.getItem('csg:theme'));
+        } catch {}
+        const dark = t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        document.querySelector('meta[name="theme-color"]').content = dark ? '#0b0b0c' : '#fafaf9';
+      })();
+    </script>
+    <link rel="stylesheet" href="/index.css" />
+    <style>
+      .lost {
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        gap: 20px;
+        min-height: 0;
+        padding: 16px 0;
+        text-align: center;
+      }
+
+      .lost-strip {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 6px;
+        width: min(420px, 100%);
+        height: clamp(96px, 22dvh, 180px);
+      }
+
+      .lost-strip i {
+        border-radius: 16px;
+        box-shadow: inset 0 0 0 1px var(--line);
+      }
+
+      .lost-strip i:nth-child(1) {
+        background: oklch(0.86 0.004 90);
+      }
+
+      .lost-strip i:nth-child(2) {
+        background: oklch(0.72 0.005 90);
+      }
+
+      .lost-strip i:nth-child(3) {
+        background: transparent;
+        box-shadow: none;
+        border: 2px dashed var(--line-2);
+      }
+
+      .lost-strip i:nth-child(4) {
+        background: oklch(0.52 0.006 90);
+      }
+
+      .lost-strip i:nth-child(5) {
+        background: oklch(0.34 0.006 90);
+      }
+
+      .lost-code {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--muted);
+        letter-spacing: 0.04em;
+      }
+
+      .lost h1 {
+        font-size: clamp(26px, 6vw, 40px);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+        max-width: 18ch;
+      }
+
+      .lost p {
+        color: var(--muted);
+        max-width: 34ch;
+      }
+
+      .lost .btn {
+        height: 44px;
+        padding: 0 18px;
+      }
+
+      .lost .btn .btn-label {
+        display: inline;
+      }
+
+      @media (max-height: 520px) {
+        .lost {
+          gap: 12px;
+        }
+
+        .lost-strip {
+          display: none;
+        }
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        .lost .btn:hover .ic {
+          transform: translateX(-2px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app" style="grid-template-rows: auto minmax(0, 1fr) auto">
+      <header class="top">
+        <a class="brand" href="/">
+          <img src="/icon.svg" width="28" height="28" alt="" />
+          <span>Color Scheme Generator</span>
+        </a>
+      </header>
+      <main class="lost">
+        <div class="lost-strip" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+        <span class="lost-code">#404040 · NOT FOUND</span>
+        <h1>This page fell off the color wheel.</h1>
+        <p>The link might be old, or it never existed. The palette is still where you left it.</p>
+        <a class="btn btn-primary" href="/">
+          <svg class="ic" viewBox="0 0 256 256"><path d="M228,128a12,12,0,0,1-12,12H69l51.52,51.51a12,12,0,0,1-17,17l-72-72a12,12,0,0,1,0-17l72-72a12,12,0,0,1,17,17L69,116H216A12,12,0,0,1,228,128Z"/></svg>
+          <span class="btn-label">Back to the palette</span>
+        </a>
+      </main>
+      <footer class="foot">
+        <span>Names and harmonies from <a href="https://www.thecolorapi.com/" target="_blank" rel="noopener">The Color API</a></span>
+        <span>Made by <a href="https://ashwin.co.in" target="_blank" rel="noopener">Ashwin</a></span>
+      </footer>
+    </div>
+  </body>
+</html>
