@@ -24,7 +24,8 @@ import {
 import { initTips } from './tip.js';
 
 const COUNT = 5;
-const APP = 'Color Scheme Generator';
+const APP = 'Fandeck';
+const HOME_TITLE = `${APP} · Five colors from one you pick`;
 const THRESHOLDS = [3, 4.5, 7];
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -78,7 +79,7 @@ let seedTimer = 0;
 let seedPending = false;
 
 function setTitle(section) {
-  document.title = section ? `${section} · ${APP}` : APP;
+  document.title = section ? `${section} · ${APP}` : HOME_TITLE;
 }
 
 function currentTitle() {
@@ -687,7 +688,7 @@ async function share() {
   const coarse = matchMedia('(pointer: coarse)').matches;
   if (navigator.share && coarse) {
     try {
-      await navigator.share({ title: APP, url });
+      await navigator.share({ title: `${APP} palette`, url });
       return;
     } catch (err) {
       if (err?.name === 'AbortError') return;
@@ -893,7 +894,7 @@ const exportSheet = createSheet($('#export-sheet'), {
 });
 
 const historySheet = createSheet($('#history-sheet'), {
-  onOpen: () => setTitle('Recent'),
+  onOpen: () => setTitle('Recent palettes'),
   onClose: () => setTitle(currentTitle()),
 });
 

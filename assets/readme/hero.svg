@@ -1,11 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="380" viewBox="0 0 1200 380" role="img" aria-labelledby="t d">
-  <title id="t">Color Scheme Generator</title>
-  <desc id="d">Color Scheme Generator: five colors that work together, from one you pick. Five paint chips with live white and black text samples, the middle one locked, beside a hue wheel with each color plotted by its oklch hue and chroma, using the same maths the app uses.</desc>
+  <title id="t">Fandeck</title>
+  <desc id="d">Fandeck: five colors that work together, from one you pick. Five paint chips with live white and black text samples, the middle one locked, beside a hue wheel with each color plotted by its oklch hue and chroma, using the same maths the app uses.</desc>
   <rect x="0.5" y="0.5" width="1199" height="379" rx="20" fill="#f0f0ef" stroke="rgba(17,17,16,0.10)"/>
   <g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif">
     <text x="64" y="98" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="17" fill="#74736d">one color in, five out</text>
-    <text x="64" y="170" font-size="52" font-weight="600" letter-spacing="-1.6" fill="#111110">Color Scheme</text>
-    <text x="64" y="224" font-size="52" font-weight="600" letter-spacing="-1.6" fill="#111110">Generator</text>
+    <text x="64" y="200" font-size="68" font-weight="600" letter-spacing="-2" fill="#111110">Fandeck</text>
     <text x="64" y="266" font-size="20" fill="#111110">pick a color and a harmony. lock the chips</text>
     <text x="64" y="294" font-size="20" fill="#111110">you like, shuffle the rest.</text>
     <text x="64" y="334" xml:space="preserve" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="17" fill="#74736d">vanilla js<tspan fill="rgba(17,17,16,0.22)"> / </tspan>the color api<tspan fill="rgba(17,17,16,0.22)"> / </tspan>0 dependencies</text>

@@ -1,11 +1,11 @@
 <p align="center">
-  <a href="https://palette.ashwin.co.in">
-    <img src="./assets/readme/hero.svg" width="100%" alt="Color Scheme Generator: one color in, five out. five paint chips with live white and black text samples, the middle one locked, beside a hue wheel with each color plotted by its oklch hue and chroma">
+  <a href="https://fandeck.ashwin.co.in">
+    <img src="./assets/readme/hero.svg" width="100%" alt="Fandeck: one color in, five out. five paint chips with live white and black text samples, the middle one locked, beside a hue wheel with each color plotted by its oklch hue and chroma">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://palette.ashwin.co.in"><strong>palette.ashwin.co.in</strong></a>
+  <a href="https://fandeck.ashwin.co.in"><strong>fandeck.ashwin.co.in</strong></a>
   &nbsp;·&nbsp;
   <a href="#what-it-does">what it does</a>
   &nbsp;·&nbsp;
@@ -17,21 +17,21 @@
 <br>
 
 <p align="center">
-  <img src="./docs/screenshots/ColorSchemeGenerator.webp" width="100%" alt="the app on desktop: five paint chips named blue dianne, jungle green, rob roy, sandy brown and burnt sienna, each with white and black aa samples on the color and a white label with its number, name and hex, above a ruled bar with the base color, all eight harmonies, copy as, share, export and shuffle">
+  <img src="./docs/screenshots/Fandeck.webp" width="100%" alt="the app on desktop: five paint chips named blue dianne, jungle green, rob roy, sandy brown and burnt sienna, each with white and black aa samples on the color and a white label with its number, name and hex, above a ruled bar with the base color, all eight harmonies, copy as, share, export and shuffle">
 </p>
 
-the source of **[palette.ashwin.co.in](https://palette.ashwin.co.in)**. pick one color, pick a harmony, and get five that work together. lock the ones you like, shuffle the rest, check which pairs are readable, and take the lot away as css, tailwind, json or a png.
+the source of **[fandeck.ashwin.co.in](https://fandeck.ashwin.co.in)**, named after the fan of paint chips you flip through in a paint store. pick one color, pick a harmony, and get five that work together. lock the ones you like, shuffle the rest, check which pairs are readable, and take the lot away as css, tailwind, json or a png.
 
 it is one html file, one stylesheet and eight small modules. no framework, no build step, no dependencies. the palettes and their names come from [the color api](https://www.thecolorapi.com/); everything else, the conversions, the contrast maths and the exports, happens in the browser.
 
 ## what it does
 
 <p align="center">
-  <img src="./docs/screenshots/ColorSchemeGenerator-4.webp" width="32%" alt="the app on a phone: five chips as rows, color on the left with its text samples and a white label on the right with name, hex, lock and copy, the third one locked">
+  <img src="./docs/screenshots/Fandeck-4.webp" width="32%" alt="the app on a phone: five chips as rows, color on the left with its text samples and a white label on the right with name, hex, lock and copy, the third one locked">
   &nbsp;
-  <img src="./docs/screenshots/ColorSchemeGenerator-6.webp" width="32%" alt="the contrast view on a phone: every palette color plus white and black as text on every other, with ratios, and the failing pairs struck through">
+  <img src="./docs/screenshots/Fandeck-6.webp" width="32%" alt="the contrast view on a phone: every palette color plus white and black as text on every other, with ratios, and the failing pairs struck through">
   &nbsp;
-  <img src="./docs/screenshots/ColorSchemeGenerator-7.webp" width="32%" alt="the export sheet on a phone, on the png tab, showing the palette as an image with download and copy image buttons">
+  <img src="./docs/screenshots/Fandeck-7.webp" width="32%" alt="the export sheet on a phone, on the png tab, showing the palette as an image with download and copy image buttons">
 </p>
 
 - **live, not a button.** change the base color or the harmony and the palette follows. dragging the picker waits 260 ms after you stop before it asks the api, and a new request cancels the one in flight, so the last color you touched is the one you get.
@@ -106,8 +106,8 @@ it is laid out like a paint chip, because that is what a palette is when it is n
 there is nothing to install. the modules need to be served rather than opened as a file, so any static server works:
 
 ```sh
-git clone https://github.com/Ashwin-S-Nambiar/Color-Scheme-Generator.git
-cd Color-Scheme-Generator
+git clone https://github.com/Ashwin-S-Nambiar/Fandeck.git
+cd Fandeck
 python3 -m http.server 5173   # or: npx serve
 ```
 
@@ -142,26 +142,26 @@ fonts/          hanken grotesk and fragment mono, latin and latin-ext
 
 <br>
 
-![the contrast view on desktop: a seven by seven grid of text on background pairs with ratios, the aa threshold picked, and 16 of 42 pairs passing](./docs/screenshots/ColorSchemeGenerator-2.webp)
+![the contrast view on desktop: a seven by seven grid of text on background pairs with ratios, the aa threshold picked, and 16 of 42 pairs passing](./docs/screenshots/Fandeck-2.webp)
 
-![the export sheet on desktop, on the tailwind tab, with a theme block of five named colors](./docs/screenshots/ColorSchemeGenerator-3.webp)
+![the export sheet on desktop, on the tailwind tab, with a theme block of five named colors](./docs/screenshots/Fandeck-3.webp)
 
-![the color picker open over the palette on desktop: a before and after chip, the color name, a full lightness by chroma square, a hue strip, hex, l, c and h fields, and this palette and recent swatches](./docs/screenshots/ColorSchemeGenerator-10.webp)
+![the color picker open over the palette on desktop: a before and after chip, the color name, a full lightness by chroma square, a hue strip, hex, l, c and h fields, and this palette and recent swatches](./docs/screenshots/Fandeck-10.webp)
 
 <p align="center">
-  <img src="./docs/screenshots/ColorSchemeGenerator-5.webp" width="32%" alt="chips in oklch on a phone, with a chip shaped toast confirming the copied value">
+  <img src="./docs/screenshots/Fandeck-5.webp" width="32%" alt="chips in oklch on a phone, with a chip shaped toast confirming the copied value">
   &nbsp;
-  <img src="./docs/screenshots/ColorSchemeGenerator-8.webp" width="32%" alt="the recent palettes sheet, four saved palettes with their harmony and when they were made">
+  <img src="./docs/screenshots/Fandeck-8.webp" width="32%" alt="the recent palettes sheet, four saved palettes with their harmony and when they were made">
   &nbsp;
-  <img src="./docs/screenshots/ColorSchemeGenerator-9.webp" width="32%" alt="the 404 page: a swatch book of greys with the middle chip missing, and a line saying the page is not in the swatch book">
+  <img src="./docs/screenshots/Fandeck-9.webp" width="32%" alt="the 404 page: a swatch book of greys with the middle chip missing, and a line saying the page is not in the swatch book">
 </p>
 
 </details>
 
-<br>
+## credit
 
-<div align="center">
+palettes and color names come from [the color api](https://www.thecolorapi.com/), which is [open source](https://github.com/andjosh/thecolorapi).
 
-**Made with ❤️ by [Ashwin S Nambiar](https://github.com/Ashwin-S-Nambiar)**
+---
 
-</div>
+[fandeck.ashwin.co.in](https://fandeck.ashwin.co.in) · [ashwin.co.in](https://ashwin.co.in) · [notes](https://notes.ashwin.co.in) · [x](https://x.com/ashwinnambiar11) · [github](https://github.com/Ashwin-S-Nambiar)

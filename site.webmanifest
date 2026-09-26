@@ -1,6 +1,6 @@
 {
-  "name": "Color Scheme Generator",
-  "short_name": "Palette",
+  "name": "Fandeck",
+  "short_name": "Fandeck",
   "description": "Five colors that work together, from one you pick.",
   "start_url": "/",
   "display": "standalone",
