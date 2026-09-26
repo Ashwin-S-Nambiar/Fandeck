@@ -133,7 +133,7 @@ export function grade(ratio) {
   if (ratio >= 7) return 'AAA';
   if (ratio >= 4.5) return 'AA';
   if (ratio >= 3) return 'Large';
-  return 'Low';
+  return 'Fail';
 }
 
 export function inkFor(hex) {
@@ -195,17 +195,50 @@ export function tokenNames(swatches) {
   });
 }
 
-export function roles(hexes) {
-  const info = hexes.map((hex) => ({ hex, ...rgbToOklch(hexToRgb(hex)) }));
-  const byL = [...info].sort((a, b) => a.l - b.l);
-  const byC = [...info].sort((a, b) => b.c - a.c);
-  const primary = byC[0];
-  const second = byC.find((c) => c.hex !== primary.hex) ?? primary;
+const fromLinear = (v) =>
+  (v <= 0.0031308 ? 12.92 * v : 1.055 * v ** (1 / 2.4) - 0.055) * 255;
+
+export function oklchToRgb({ l, c, h }) {
+  const hr = (h * Math.PI) / 180;
+  const a = c * Math.cos(hr);
+  const b = c * Math.sin(hr);
+  const l1 = (l + 0.3963377774 * a + 0.2158037573 * b) ** 3;
+  const m1 = (l - 0.1055613458 * a - 0.0638541728 * b) ** 3;
+  const s1 = (l - 0.0894841775 * a - 1.291485548 * b) ** 3;
   return {
-    darkest: byL[0].hex,
-    lightest: byL[byL.length - 1].hex,
-    primary: primary.hex,
-    secondary: second.hex,
-    ordered: byL.map((c) => c.hex),
+    r: fromLinear(4.0767416621 * l1 - 3.3077115913 * m1 + 0.2309699292 * s1),
+    g: fromLinear(-1.2684380046 * l1 + 2.6097574011 * m1 - 0.3413193965 * s1),
+    b: fromLinear(-0.0041960863 * l1 - 0.7034186147 * m1 + 1.707614701 * s1),
   };
+}
+
+export function inGamut({ r, g, b }) {
+  return (
+    r >= -0.5 &&
+    r <= 255.5 &&
+    g >= -0.5 &&
+    g <= 255.5 &&
+    b >= -0.5 &&
+    b <= 255.5
+  );
+}
+
+export function maxChroma(l, h) {
+  let lo = 0;
+  let hi = 0.4;
+  for (let i = 0; i < 18; i++) {
+    const mid = (lo + hi) / 2;
+    if (inGamut(oklchToRgb({ l, c: mid, h }))) lo = mid;
+    else hi = mid;
+  }
+  return lo;
+}
+
+export function hexToOklch(hex) {
+  return rgbToOklch(hexToRgb(hex));
+}
+
+export function oklchToHex(lch) {
+  const c = Math.min(lch.c, maxChroma(lch.l, lch.h));
+  return rgbToHex(oklchToRgb({ ...lch, c }));
 }

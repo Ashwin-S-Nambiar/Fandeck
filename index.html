@@ -3,10 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#fafaf9" />
+    <meta name="theme-color" content="#f0f0ef" />
     <title>Color Scheme Generator</title>
-    <meta name="description" content="Pick a color and a harmony, get five that work together. Lock the ones you like, shuffle the rest, check contrast, and export to CSS, Tailwind, JSON or PNG." />
+    <meta name="description" content="Pick a color and a harmony, get five that work together. Lock the ones you like, shuffle the rest, check every pair for contrast, and export to CSS, Tailwind, JSON or PNG." />
     <link rel="canonical" href="https://palette.ashwin.co.in/" />
     <meta property="og:site_name" content="Color Scheme Generator" />
     <meta property="og:type" content="website" />
@@ -16,7 +15,7 @@
     <meta property="og:image" content="https://palette.ashwin.co.in/og.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Color Scheme Generator: a five color palette with names, hex codes and contrast checks" />
+    <meta property="og:image:alt" content="Color Scheme Generator: five paint chips with names, hex codes and live text samples" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Color Scheme Generator" />
     <meta name="twitter:description" content="Pick a color and a harmony, get five that work together. Lock, shuffle, check contrast, export." />
@@ -27,114 +26,75 @@
     <meta name="apple-mobile-web-app-title" content="Palette" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <link rel="preload" href="/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/geist-mono-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/hanken-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/fragment-mono-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preconnect" href="https://www.thecolorapi.com" crossorigin />
-    <script>
-      (() => {
-        let t = null;
-        try {
-          t = JSON.parse(localStorage.getItem('csg:theme'));
-        } catch {}
-        const dark = t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-        document.querySelector('meta[name="theme-color"]').content = dark ? '#0b0b0c' : '#fafaf9';
-      })();
-    </script>
     <link rel="stylesheet" href="/index.css" />
     <script type="module" src="/js/main.js"></script>
   </head>
   <body>
-    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"><symbol id="i-history" viewBox="0 0 256 256"><path d="M216,128a88,88,0,1,1-88-88A88,88,0,0,1,216,128Z" opacity="0.2"/><path d="M136,80v43.47l36.12,21.67a8,8,0,0,1-8.24,13.72l-40-24A8,8,0,0,1,120,128V80a8,8,0,0,1,16,0Zm-8-48A95.44,95.44,0,0,0,60.08,60.15C52.81,67.51,46.35,74.59,40,82V64a8,8,0,0,0-16,0v40a8,8,0,0,0,8,8H72a8,8,0,0,0,0-16H49c7.15-8.42,14.27-16.35,22.39-24.57a80,80,0,1,1,1.66,114.75,8,8,0,1,0-11,11.64A96,96,0,1,0,128,32Z"/></symbol><symbol id="i-sun" viewBox="0 0 256 256"><path d="M184,128a56,56,0,1,1-56-56A56,56,0,0,1,184,128Z" opacity="0.2"/><path d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"/></symbol><symbol id="i-moon" viewBox="0 0 256 256"><path d="M227.89,147.89A96,96,0,1,1,108.11,28.11,96.09,96.09,0,0,0,227.89,147.89Z" opacity="0.2"/><path d="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23ZM188.9,190.34A88,88,0,0,1,65.66,67.11a89,89,0,0,1,31.4-26A106,106,0,0,0,96,56,104.11,104.11,0,0,0,200,160a106,106,0,0,0,14.92-1.06A89,89,0,0,1,188.9,190.34Z"/></symbol><symbol id="i-sound" viewBox="0 0 256 256"><path d="M80,88v80H32a8,8,0,0,1-8-8V96a8,8,0,0,1,8-8Z" opacity="0.2"/><path d="M155.51,24.81a8,8,0,0,0-8.42.88L77.25,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H77.25l69.84,54.31A8,8,0,0,0,160,224V32A8,8,0,0,0,155.51,24.81ZM32,96H72v64H32ZM144,207.64,88,164.09V91.91l56-43.55Zm54-106.08a40,40,0,0,1,0,52.88,8,8,0,0,1-12-10.58,24,24,0,0,0,0-31.72,8,8,0,0,1,12-10.58ZM248,128a79.9,79.9,0,0,1-20.37,53.34,8,8,0,0,1-11.92-10.67,64,64,0,0,0,0-85.33,8,8,0,1,1,11.92-10.67A79.83,79.83,0,0,1,248,128Z"/></symbol><symbol id="i-mute" viewBox="0 0 256 256"><path d="M80,88v80H32a8,8,0,0,1-8-8V96a8,8,0,0,1,8-8Z" opacity="0.2"/><path d="M53.92,34.62A8,8,0,1,0,42.08,45.38L73.55,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H77.25l69.84,54.31A8,8,0,0,0,160,224V175.09l42.08,46.29a8,8,0,1,0,11.84-10.76ZM32,96H72v64H32ZM144,207.64,88,164.09V95.89l56,61.6Zm42-63.77a24,24,0,0,0,0-31.72,8,8,0,1,1,12-10.57,40,40,0,0,1,0,52.88,8,8,0,0,1-12-10.59Zm-80.16-76a8,8,0,0,1,1.4-11.23l39.85-31A8,8,0,0,1,160,32v74.83a8,8,0,0,1-16,0V48.36l-26.94,21A8,8,0,0,1,105.84,67.91ZM248,128a79.9,79.9,0,0,1-20.37,53.34,8,8,0,0,1-11.92-10.67,64,64,0,0,0,0-85.33,8,8,0,1,1,11.92-10.67A79.83,79.83,0,0,1,248,128Z"/></symbol><symbol id="i-swatches" viewBox="0 0 256 256"><path d="M112,56v48a8,8,0,0,1-8,8H56a8,8,0,0,1-8-8V56a8,8,0,0,1,8-8h48A8,8,0,0,1,112,56Zm88-8H152a8,8,0,0,0-8,8v48a8,8,0,0,0,8,8h48a8,8,0,0,0,8-8V56A8,8,0,0,0,200,48Zm-96,96H56a8,8,0,0,0-8,8v48a8,8,0,0,0,8,8h48a8,8,0,0,0,8-8V152A8,8,0,0,0,104,144Zm96,0H152a8,8,0,0,0-8,8v48a8,8,0,0,0,8,8h48a8,8,0,0,0,8-8V152A8,8,0,0,0,200,144Z" opacity="0.2"/><path d="M200,136H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,200,136Zm0,64H152V152h48v48ZM104,40H56A16,16,0,0,0,40,56v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,104,40Zm0,64H56V56h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm0,64H152V56h48v48Zm-96,32H56a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,104,136Zm0,64H56V152h48v48Z"/></symbol><symbol id="i-preview" viewBox="0 0 256 256"><path d="M104,104V208H40a8,8,0,0,1-8-8V104Z" opacity="0.2"/><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V96H40V56ZM40,112H96v88H40Zm176,88H112V112H216v88Z"/></symbol><symbol id="i-copy" viewBox="0 0 256 256"><path d="M216,28H88A12,12,0,0,0,76,40V76H40A12,12,0,0,0,28,88V216a12,12,0,0,0,12,12H168a12,12,0,0,0,12-12V180h36a12,12,0,0,0,12-12V40A12,12,0,0,0,216,28ZM156,204H52V100H156Zm48-48H180V88a12,12,0,0,0-12-12H100V52H204Z"/></symbol><symbol id="i-check" viewBox="0 0 256 256"><path d="M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z"/></symbol><symbol id="i-unlock" viewBox="0 0 256 256"><path d="M208,76H100V56a28,28,0,0,1,28-28c13.51,0,25.65,9.62,28.24,22.39a12,12,0,1,0,23.52-4.78C174.87,21.5,153.1,4,128,4A52.06,52.06,0,0,0,76,56V76H48A20,20,0,0,0,28,96V208a20,20,0,0,0,20,20H208a20,20,0,0,0,20-20V96A20,20,0,0,0,208,76Zm-4,128H52V100H204Z"/></symbol><symbol id="i-lock" viewBox="0 0 256 256"><path d="M208,80H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96Z"/></symbol><symbol id="i-eyedropper" viewBox="0 0 256 256"><path d="M228,67.24a39.77,39.77,0,0,0-12.51-28.52C199.91,24,174.71,24.5,159.29,39.93L142.48,56.84a28,28,0,0,0-35.64,3.29l-9,9a20,20,0,0,0-.73,27.49L48.9,144.84A43.76,43.76,0,0,0,37,185.28l-7.5,17.19a17.66,17.66,0,0,0,3.71,19.65,19.9,19.9,0,0,0,22.15,4.19l16.31-7.13a43.88,43.88,0,0,0,39.45-12.09l48.24-48.26a20,20,0,0,0,27.47-.73l9-9a28.06,28.06,0,0,0,3.26-35.72l17.23-17.33A39.69,39.69,0,0,0,228,67.24ZM94.15,190.11a20,20,0,0,1-20,5,11.93,11.93,0,0,0-8.32.47L57,199.38,60.69,191a12,12,0,0,0,.37-8.64,19.92,19.92,0,0,1,4.81-20.55l48.2-48.22,28.28,28.3Zm105.14-111-25.37,25.52a12,12,0,0,0,0,16.95l4.88,4.89a4,4,0,0,1,0,5.66l-6.14,6.15-55-55.05,6.14-6.14a4,4,0,0,1,5.65,0L134.35,82a12,12,0,0,0,8.49,3.51h0A12,12,0,0,0,151.34,82l24.94-25.08c6.3-6.3,16.48-6.63,22.71-.74a16,16,0,0,1,.3,23Z"/></symbol><symbol id="i-share" viewBox="0 0 256 256"><path d="M117.18,188.74a12,12,0,0,1,0,17l-5.12,5.12A58.26,58.26,0,0,1,70.6,228h0A58.62,58.62,0,0,1,29.14,127.92L63.89,93.17a58.64,58.64,0,0,1,98.56,28.11,12,12,0,1,1-23.37,5.44,34.65,34.65,0,0,0-58.22-16.58L46.11,144.89A34.62,34.62,0,0,0,70.57,204h0a34.41,34.41,0,0,0,24.49-10.14l5.11-5.12A12,12,0,0,1,117.18,188.74ZM226.83,45.17a58.65,58.65,0,0,0-82.93,0l-5.11,5.11a12,12,0,0,0,17,17l5.12-5.12a34.63,34.63,0,1,1,49,49L175.1,145.86A34.39,34.39,0,0,1,150.61,156h0a34.63,34.63,0,0,1-33.69-26.72,12,12,0,0,0-23.38,5.44A58.64,58.64,0,0,0,150.56,180h.05a58.28,58.28,0,0,0,41.47-17.17l34.75-34.75a58.62,58.62,0,0,0,0-82.91Z"/></symbol><symbol id="i-export" viewBox="0 0 256 256"><path d="M220,112v96a20,20,0,0,1-20,20H56a20,20,0,0,1-20-20V112A20,20,0,0,1,56,92H76a12,12,0,0,1,0,24H60v88H196V116H180a12,12,0,0,1,0-24h20A20,20,0,0,1,220,112ZM96.49,72.49,116,53v83a12,12,0,0,0,24,0V53l19.51,19.52a12,12,0,1,0,17-17l-40-40a12,12,0,0,0-17,0l-40,40a12,12,0,1,0,17,17Z"/></symbol><symbol id="i-shuffle" viewBox="0 0 256 256"><path d="M240.49,175.51a12,12,0,0,1,0,17l-24,24a12,12,0,0,1-17-17L203,196h-2.09a76.17,76.17,0,0,1-61.85-31.83L97.38,105.78A52.1,52.1,0,0,0,55.06,84H32a12,12,0,0,1,0-24H55.06a76.17,76.17,0,0,1,61.85,31.83l41.71,58.39A52.1,52.1,0,0,0,200.94,172H203l-3.52-3.51a12,12,0,0,1,17-17Zm-95.62-72.62a12,12,0,0,0,16.93-1.13A52,52,0,0,1,200.94,84H203l-3.52,3.51a12,12,0,0,0,17,17l24-24a12,12,0,0,0,0-17l-24-24a12,12,0,0,0-17,17L203,60h-2.09a76,76,0,0,0-57.2,26A12,12,0,0,0,144.87,102.89Zm-33.74,50.22a12,12,0,0,0-16.93,1.13A52,52,0,0,1,55.06,172H32a12,12,0,0,0,0,24H55.06a76,76,0,0,0,57.2-26A12,12,0,0,0,111.13,153.11Z"/></symbol><symbol id="i-x" viewBox="0 0 256 256"><path d="M208.49,191.51a12,12,0,0,1-17,17L128,145,64.49,208.49a12,12,0,0,1-17-17L111,128,47.51,64.49a12,12,0,0,1,17-17L128,111l63.51-63.52a12,12,0,0,1,17,17L145,128Z"/></symbol><symbol id="i-trash" viewBox="0 0 256 256"><path d="M216,48H180V36A28,28,0,0,0,152,8H104A28,28,0,0,0,76,36V48H40a12,12,0,0,0,0,24h4V208a20,20,0,0,0,20,20H192a20,20,0,0,0,20-20V72h4a12,12,0,0,0,0-24ZM100,36a4,4,0,0,1,4-4h48a4,4,0,0,1,4,4V48H100Zm88,168H68V72H188ZM116,104v64a12,12,0,0,1-24,0V104a12,12,0,0,1,24,0Zm48,0v64a12,12,0,0,1-24,0V104a12,12,0,0,1,24,0Z"/></symbol><symbol id="i-download" viewBox="0 0 256 256"><path d="M228,144v64a12,12,0,0,1-12,12H40a12,12,0,0,1-12-12V144a12,12,0,0,1,24,0v52H204V144a12,12,0,0,1,24,0Zm-108.49,8.49a12,12,0,0,0,17,0l40-40a12,12,0,0,0-17-17L140,115V32a12,12,0,0,0-24,0v83L96.49,95.51a12,12,0,0,0-17,17Z"/></symbol><symbol id="i-back" viewBox="0 0 256 256"><path d="M228,128a12,12,0,0,1-12,12H69l51.52,51.51a12,12,0,0,1-17,17l-72-72a12,12,0,0,1,0-17l72-72a12,12,0,0,1,17,17L69,116H216A12,12,0,0,1,228,128Z"/></symbol><symbol id="i-warn" viewBox="0 0 256 256"><path d="M128,20A108,108,0,1,0,236,128,108.12,108.12,0,0,0,128,20Zm0,192a84,84,0,1,1,84-84A84.09,84.09,0,0,1,128,212Zm-12-80V80a12,12,0,0,1,24,0v52a12,12,0,0,1-24,0Zm28,40a16,16,0,1,1-16-16A16,16,0,0,1,144,172Z"/></symbol><symbol id="i-retry" viewBox="0 0 256 256"><path d="M228,128a100,100,0,0,1-98.66,100H128a99.39,99.39,0,0,1-68.62-27.29,12,12,0,0,1,16.48-17.45,76,76,0,1,0-1.57-109c-.13.13-.25.25-.39.37L54.89,92H72a12,12,0,0,1,0,24H24a12,12,0,0,1-12-12V56a12,12,0,0,1,24,0V76.72L57.48,57.06A100,100,0,0,1,228,128Z"/></symbol></svg>
-    <div class="glow" aria-hidden="true"><i></i><i></i></div>
+    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"><symbol id="i-history" viewBox="0 0 256 256"><path d="M136,80v43.47l36.12,21.67a8,8,0,0,1-8.24,13.72l-40-24A8,8,0,0,1,120,128V80a8,8,0,0,1,16,0Zm-8-48A95.44,95.44,0,0,0,60.08,60.15C52.81,67.51,46.35,74.59,40,82V64a8,8,0,0,0-16,0v40a8,8,0,0,0,8,8H72a8,8,0,0,0,0-16H49c7.15-8.42,14.27-16.35,22.39-24.57a80,80,0,1,1,1.66,114.75,8,8,0,1,0-11,11.64A96,96,0,1,0,128,32Z"/></symbol><symbol id="i-sound" viewBox="0 0 256 256"><path d="M155.51,24.81a8,8,0,0,0-8.42.88L77.25,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H77.25l69.84,54.31A8,8,0,0,0,160,224V32A8,8,0,0,0,155.51,24.81ZM32,96H72v64H32ZM144,207.64,88,164.09V91.91l56-43.55Zm54-106.08a40,40,0,0,1,0,52.88,8,8,0,0,1-12-10.58,24,24,0,0,0,0-31.72,8,8,0,0,1,12-10.58ZM248,128a79.9,79.9,0,0,1-20.37,53.34,8,8,0,0,1-11.92-10.67,64,64,0,0,0,0-85.33,8,8,0,1,1,11.92-10.67A79.83,79.83,0,0,1,248,128Z"/></symbol><symbol id="i-mute" viewBox="0 0 256 256"><path d="M53.92,34.62A8,8,0,1,0,42.08,45.38L73.55,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H77.25l69.84,54.31A8,8,0,0,0,160,224V175.09l42.08,46.29a8,8,0,1,0,11.84-10.76ZM32,96H72v64H32ZM144,207.64,88,164.09V95.89l56,61.6Zm42-63.77a24,24,0,0,0,0-31.72,8,8,0,1,1,12-10.57,40,40,0,0,1,0,52.88,8,8,0,0,1-12-10.59Zm-80.16-76a8,8,0,0,1,1.4-11.23l39.85-31A8,8,0,0,1,160,32v74.83a8,8,0,0,1-16,0V48.36l-26.94,21A8,8,0,0,1,105.84,67.91ZM248,128a79.9,79.9,0,0,1-20.37,53.34,8,8,0,0,1-11.92-10.67,64,64,0,0,0,0-85.33,8,8,0,1,1,11.92-10.67A79.83,79.83,0,0,1,248,128Z"/></symbol><symbol id="i-chips" viewBox="0 0 256 256"><path d="M104,32H64A16,16,0,0,0,48,48V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,104,32Zm0,176H64V48h40ZM192,32H152a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,192,32Zm0,176H152V48h40Z"/></symbol><symbol id="i-pairs" viewBox="0 0 256 256"><path d="M216,48H40A16,16,0,0,0,24,64V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V64A16,16,0,0,0,216,48ZM104,144V112h48v32Zm48,16v32H104V160ZM40,112H88v32H40Zm64-16V64h48V96Zm64,16h48v32H168Zm48-16H168V64h48ZM88,64V96H40V64ZM40,160H88v32H40Zm176,32H168V160h48v32Z"/></symbol><symbol id="i-copy" viewBox="0 0 256 256"><path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"/></symbol><symbol id="i-check" viewBox="0 0 256 256"><path d="M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z"/></symbol><symbol id="i-unlock" viewBox="0 0 256 256"><path d="M208,80H96V56a32,32,0,0,1,32-32c15.37,0,29.2,11,32.16,25.59a8,8,0,0,0,15.68-3.18C171.32,24.15,151.2,8,128,8A48.05,48.05,0,0,0,80,56V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80Zm0,128H48V96H208V208Z"/></symbol><symbol id="i-lock" viewBox="0 0 256 256"><path d="M208,80H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96Z"/></symbol><symbol id="i-eyedropper" viewBox="0 0 256 256"><path d="M224,67.3a35.79,35.79,0,0,0-11.26-25.66c-14-13.28-36.72-12.78-50.62,1.13L142.8,62.2a24,24,0,0,0-33.14.77l-9,9a16,16,0,0,0,0,22.64l2,2.06-51,51a39.75,39.75,0,0,0-10.53,38l-8,18.41A13.68,13.68,0,0,0,36,219.3a15.92,15.92,0,0,0,17.71,3.35L71.23,215a39.89,39.89,0,0,0,37.06-10.75l51-51,2.06,2.06a16,16,0,0,0,22.62,0l9-9a24,24,0,0,0,.74-33.18l19.75-19.87A35.75,35.75,0,0,0,224,67.3ZM97,193a24,24,0,0,1-24,6,8,8,0,0,0-5.55.31l-18.1,7.91L57,189.41a8,8,0,0,0,.25-5.75A23.88,23.88,0,0,1,63,159l51-51,33.94,34ZM202.13,82l-25.37,25.52a8,8,0,0,0,0,11.3l4.89,4.89a8,8,0,0,1,0,11.32l-9,9L112,83.26l9-9a8,8,0,0,1,11.31,0l4.89,4.89a8,8,0,0,0,11.33,0l24.94-25.09c7.81-7.82,20.5-8.18,28.29-.81a20,20,0,0,1,.39,28.7Z"/></symbol><symbol id="i-share" viewBox="0 0 256 256"><path d="M240,88.23a54.43,54.43,0,0,1-16,37L189.25,160a54.27,54.27,0,0,1-38.63,16h-.05A54.63,54.63,0,0,1,96,119.84a8,8,0,0,1,16,.45A38.62,38.62,0,0,0,150.58,160h0a38.39,38.39,0,0,0,27.31-11.31l34.75-34.75a38.63,38.63,0,0,0-54.63-54.63l-11,11A8,8,0,0,1,135.7,59l11-11A54.65,54.65,0,0,1,224,48,54.86,54.86,0,0,1,240,88.23ZM109,185.66l-11,11A38.41,38.41,0,0,1,70.6,208h0a38.63,38.63,0,0,1-27.29-65.94L78,107.31A38.63,38.63,0,0,1,144,135.71a8,8,0,0,0,16,.45A54.86,54.86,0,0,0,144,96a54.65,54.65,0,0,0-77.27,0L32,130.75A54.62,54.62,0,0,0,70.56,224h0a54.28,54.28,0,0,0,38.64-16l11-11A8,8,0,0,0,109,185.66Z"/></symbol><symbol id="i-export" viewBox="0 0 256 256"><path d="M216,112v96a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V112A16,16,0,0,1,56,96H80a8,8,0,0,1,0,16H56v96H200V112H176a8,8,0,0,1,0-16h24A16,16,0,0,1,216,112ZM93.66,69.66,120,43.31V136a8,8,0,0,0,16,0V43.31l26.34,26.35a8,8,0,0,0,11.32-11.32l-40-40a8,8,0,0,0-11.32,0l-40,40A8,8,0,0,0,93.66,69.66Z"/></symbol><symbol id="i-shuffle" viewBox="0 0 256 256"><path d="M237.66,178.34a8,8,0,0,1,0,11.32l-24,24a8,8,0,0,1-11.32-11.32L212.69,192H200.94a72.12,72.12,0,0,1-58.59-30.15l-41.72-58.4A56.1,56.1,0,0,0,55.06,80H32a8,8,0,0,1,0-16H55.06a72.12,72.12,0,0,1,58.59,30.15l41.72,58.4A56.1,56.1,0,0,0,200.94,176h11.75l-10.35-10.34a8,8,0,0,1,11.32-11.32ZM143,107a8,8,0,0,0,11.16-1.86l1.2-1.67A56.1,56.1,0,0,1,200.94,80h11.75L202.34,90.34a8,8,0,0,0,11.32,11.32l24-24a8,8,0,0,0,0-11.32l-24-24a8,8,0,0,0-11.32,11.32L212.69,64H200.94a72.12,72.12,0,0,0-58.59,30.15l-1.2,1.67A8,8,0,0,0,143,107Zm-30,42a8,8,0,0,0-11.16,1.86l-1.2,1.67A56.1,56.1,0,0,1,55.06,176H32a8,8,0,0,0,0,16H55.06a72.12,72.12,0,0,0,58.59-30.15l1.2-1.67A8,8,0,0,0,113,149Z"/></symbol><symbol id="i-x" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></symbol><symbol id="i-trash" viewBox="0 0 256 256"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"/></symbol><symbol id="i-download" viewBox="0 0 256 256"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"/></symbol><symbol id="i-back" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"/></symbol><symbol id="i-warn" viewBox="0 0 256 256"><path d="M236.8,188.09,149.35,36.22h0a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM222.93,203.8a8.5,8.5,0,0,1-7.48,4.2H40.55a8.5,8.5,0,0,1-7.48-4.2,7.59,7.59,0,0,1,0-7.72L120.52,44.21a8.75,8.75,0,0,1,15,0l87.45,151.87A7.59,7.59,0,0,1,222.93,203.8ZM120,144V104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,180Z"/></symbol><symbol id="i-undo" viewBox="0 0 256 256"><path d="M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V56a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z"/></symbol></svg>
     <div class="app">
       <header class="top">
-        <a class="brand" href="/" data-sfx="none">
-          <img src="/icon.svg" width="28" height="28" alt="" />
-          <span>Color Scheme Generator</span>
+        <a class="mark" href="/" data-sfx="none" aria-label="Color Scheme Generator, home">
+          <span class="mark-bar" id="mark-bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+          <span class="mark-name">Color Scheme Generator</span>
         </a>
-        <div class="capsule" role="toolbar" aria-label="Settings">
-          <button class="cap-btn" id="view-btn" type="button" aria-pressed="false" aria-label="Show UI preview" title="UI preview (P)">
-            <svg class="ic ic-a"><use href="#i-preview" /></svg>
-            <svg class="ic ic-b"><use href="#i-swatches" /></svg>
-          </button>
-          <button class="cap-btn" id="history-btn" type="button" aria-label="Recent palettes" title="Recent palettes">
+        <div class="tools">
+          <div class="views" role="group" aria-label="View">
+            <button class="view" type="button" data-view="chips" aria-pressed="true">
+              <svg class="ic"><use href="#i-chips" /></svg><span>Chips</span>
+            </button>
+            <button class="view" type="button" data-view="pairs" aria-pressed="false">
+              <svg class="ic"><use href="#i-pairs" /></svg><span>Contrast</span>
+            </button>
+          </div>
+          <button class="tool" id="history-btn" type="button" aria-label="Recent palettes" data-tip="Recent palettes">
             <svg class="ic"><use href="#i-history" /></svg>
           </button>
-          <button class="cap-btn" id="sound-btn" type="button" aria-pressed="true" aria-label="Sound" title="Sound">
+          <button class="tool" id="sound-btn" type="button" aria-pressed="true" aria-label="Mute sounds" data-tip="Mute sounds">
             <svg class="ic ic-a"><use href="#i-sound" /></svg>
             <svg class="ic ic-b"><use href="#i-mute" /></svg>
-          </button>
-          <button class="cap-btn" id="theme-btn" type="button" aria-label="Switch theme" title="Switch theme">
-            <svg class="ic ic-a"><use href="#i-moon" /></svg>
-            <svg class="ic ic-b"><use href="#i-sun" /></svg>
           </button>
         </div>
       </header>
 
-      <main class="stage" id="stage" data-view="swatches">
+      <main class="stage" id="stage" data-view="chips">
         <h1 class="sr-only">Color Scheme Generator</h1>
-        <section class="swatches" id="swatches" aria-label="Palette"></section>
-        <section class="preview" id="preview" aria-label="UI preview" hidden>
-          <div class="mock" aria-hidden="true" inert>
-            <article class="mock-card mock-hero">
-              <span class="mock-chip">This Saturday</span>
-              <h2 class="mock-title">Night market</h2>
-              <p class="mock-text">Forty stalls, one stage and far too many snacks. Doors open at 6.</p>
-              <div class="mock-actions">
-                <span class="mock-btn mock-primary">Get a pass</span>
-                <span class="mock-btn mock-ghost">Maybe later</span>
-              </div>
-              <div class="mock-people">
-                <span class="mock-avatar"></span><span class="mock-avatar"></span><span class="mock-avatar"></span>
-                <span class="mock-note">312 going</span>
-              </div>
-            </article>
-            <article class="mock-card mock-stats">
-              <div class="mock-stat-head">
-                <span class="mock-label">Passes sold</span>
-                <span class="mock-big">1,284</span>
-              </div>
-              <div class="mock-bars">
-                <i style="--h: 42%"></i><i style="--h: 64%"></i><i style="--h: 51%"></i><i style="--h: 88%"></i><i style="--h: 70%"></i><i style="--h: 96%"></i><i style="--h: 58%"></i>
-              </div>
-              <div class="mock-row">
-                <span class="mock-switch"><i></i></span>
-                <span class="mock-text">Remind me an hour before</span>
-              </div>
-            </article>
+        <section class="chips" id="chips" aria-label="Palette"></section>
+        <section class="pairs" id="pairs" aria-labelledby="pairs-title" hidden>
+          <div class="pairs-head">
+            <div class="pairs-copy">
+              <h2 id="pairs-title">Text on background</h2>
+              <p id="pairs-summary">&nbsp;</p>
+            </div>
+            <div class="seg" id="threshold" role="radiogroup" aria-label="Pass at">
+              <button type="button" role="radio" data-th="3" aria-checked="false">AA large <span>3</span></button>
+              <button type="button" role="radio" data-th="4.5" aria-checked="true">AA <span>4.5</span></button>
+              <button type="button" role="radio" data-th="7" aria-checked="false">AAA <span>7</span></button>
+            </div>
           </div>
+          <div class="pairs-grid" id="pairs-grid" aria-label="Contrast of every text and background pair"></div>
         </section>
       </main>
 
-      <div class="dock" id="dock">
-        <div class="dock-row">
-          <div class="seed">
-            <label class="seed-chip" title="Pick a base color">
-              <input type="color" id="seed-picker" aria-label="Base color" />
+      <div class="bar" id="bar">
+        <div class="sec sec-base">
+          <span class="eyebrow" id="base-label">Base</span>
+          <div class="base">
+            <button class="seed-chip" id="seed-btn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="picker" aria-label="Pick a base color" data-tip="Open the color picker">
               <span class="seed-dot"></span>
-            </label>
+            </button>
             <input id="seed-hex" class="seed-hex" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="7" aria-label="Base color hex" />
-            <button class="icon-btn" id="eyedropper-btn" type="button" aria-label="Pick a color from the screen" title="Pick from screen" hidden>
+            <button class="icon-btn" id="eyedropper-btn" type="button" aria-label="Pick a color from the screen" data-tip="Pick a color from the screen" hidden>
               <svg class="ic"><use href="#i-eyedropper" /></svg>
             </button>
           </div>
-          <button class="format-btn" id="format-btn" type="button" aria-label="Color format" title="Color format (F)">HEX</button>
-          <div class="dock-actions">
-            <button class="btn" id="share-btn" type="button" aria-label="Share palette">
-              <svg class="ic"><use href="#i-share" /></svg><span class="btn-label">Share</span>
-            </button>
-            <button class="btn" id="export-btn" type="button" aria-label="Export palette">
-              <svg class="ic"><use href="#i-export" /></svg><span class="btn-label">Export</span>
-            </button>
-            <button class="btn btn-primary" id="shuffle-btn" type="button" aria-label="Shuffle" data-sfx="none">
-              <svg class="ic"><use href="#i-shuffle" /></svg><span class="btn-label">Shuffle</span><kbd>Space</kbd>
-            </button>
-          </div>
         </div>
-        <div class="modes" id="modes">
-          <div class="modes-track">
-            <div class="modes-list" role="radiogroup" aria-label="Harmony">
+        <div class="sec sec-harm">
+          <span class="eyebrow" id="harm-label">Harmony</span>
+          <div class="modes" id="modes">
+            <div class="modes-list" role="radiogroup" aria-labelledby="harm-label">
               <button class="mode" type="button" role="radio" data-mode="monochrome" aria-checked="false" tabindex="-1">Mono</button>
               <button class="mode" type="button" role="radio" data-mode="monochrome-dark" aria-checked="false" tabindex="-1">Mono dark</button>
               <button class="mode" type="button" role="radio" data-mode="monochrome-light" aria-checked="false" tabindex="-1">Mono light</button>
@@ -156,12 +116,67 @@
             </div>
           </div>
         </div>
+        <div class="sec sec-fmt">
+          <span class="eyebrow" id="fmt-label">Copy as</span>
+          <div class="seg fmt" id="formats" role="radiogroup" aria-labelledby="fmt-label">
+            <button type="button" role="radio" data-format="hex" aria-checked="true">HEX</button>
+            <button type="button" role="radio" data-format="rgb" aria-checked="false">RGB</button>
+            <button type="button" role="radio" data-format="hsl" aria-checked="false">HSL</button>
+            <button type="button" role="radio" data-format="oklch" aria-checked="false">OKLCH</button>
+          </div>
+        </div>
+        <div class="sec sec-act">
+          <button class="btn" id="share-btn" type="button" aria-label="Share palette">
+            <svg class="ic"><use href="#i-share" /></svg><span class="btn-label">Share</span>
+          </button>
+          <button class="btn" id="export-btn" type="button" aria-label="Export palette">
+            <svg class="ic"><use href="#i-export" /></svg><span class="btn-label">Export</span>
+          </button>
+          <button class="btn btn-ink" id="shuffle-btn" type="button" aria-label="Shuffle" data-sfx="none">
+            <svg class="ic"><use href="#i-shuffle" /></svg><span class="btn-label">Shuffle</span><kbd>Space</kbd>
+          </button>
+        </div>
       </div>
 
       <footer class="foot">
         <span>Names and harmonies from <a href="https://www.thecolorapi.com/" target="_blank" rel="noopener">The Color API</a></span>
         <span>Made by <a href="https://ashwin.co.in" target="_blank" rel="noopener">Ashwin</a></span>
       </footer>
+    </div>
+
+    <div class="picker" id="picker" role="dialog" aria-label="Base color" hidden>
+      <div class="pk-chip">
+        <button class="pk-before" type="button" data-tip="Go back to the color you started with"><span>Before</span></button>
+        <span class="pk-now"></span>
+      </div>
+      <div class="pk-label">
+        <div class="pk-id">
+          <span class="pk-name">&nbsp;</span>
+          <span class="pk-hexline">&nbsp;</span>
+        </div>
+        <button class="icon-btn pk-eyedropper" type="button" aria-label="Pick a color from the screen" data-tip="Pick a color from the screen" hidden>
+          <svg class="ic"><use href="#i-eyedropper" /></svg>
+        </button>
+      </div>
+      <div class="pk-body">
+        <div class="pk-plane" tabindex="0" role="slider" aria-label="Lightness and chroma" aria-valuetext="">
+          <canvas aria-hidden="true"></canvas>
+          <span class="pk-dot" aria-hidden="true"></span>
+        </div>
+        <div class="pk-hue" tabindex="0" role="slider" aria-label="Hue" aria-valuemin="0" aria-valuemax="360" aria-valuenow="0">
+          <span class="pk-hue-thumb" aria-hidden="true"></span>
+        </div>
+        <div class="pk-fields">
+          <label class="pk-field pk-field-hex"><span>HEX</span><input id="pk-hex" type="text" maxlength="7" autocomplete="off" spellcheck="false" autocapitalize="characters" /></label>
+          <label class="pk-field"><span>L</span><input id="pk-l" type="text" inputmode="decimal" autocomplete="off" /></label>
+          <label class="pk-field"><span>C</span><input id="pk-c" type="text" inputmode="decimal" autocomplete="off" /></label>
+          <label class="pk-field"><span>H</span><input id="pk-h" type="text" inputmode="decimal" autocomplete="off" /></label>
+        </div>
+        <div class="pk-picks">
+          <div class="pk-row"><span class="eyebrow">This palette</span><div class="pk-swatches" id="pk-palette"></div></div>
+          <div class="pk-row"><span class="eyebrow">Recent</span><div class="pk-swatches" id="pk-recent"></div></div>
+        </div>
+      </div>
     </div>
 
     <dialog class="sheet" id="export-sheet" aria-labelledby="export-title">
@@ -180,13 +195,13 @@
             <button role="tab" type="button" data-tab="png" aria-selected="false">PNG</button>
           </div>
           <div class="export-view">
-            <pre class="code" id="export-code" tabindex="0"></pre>
-            <img class="png-preview" id="export-png" alt="The palette as an image" hidden />
+            <pre class="code" id="export-code"></pre>
+            <img class="png-preview" id="export-png" alt="The palette as a PNG strip" hidden />
           </div>
           <p class="export-note" id="export-note"></p>
           <div class="panel-actions">
             <button class="btn" id="export-download" type="button"><svg class="ic"><use href="#i-download" /></svg><span>Download</span></button>
-            <button class="btn btn-primary" id="export-copy" type="button"><svg class="ic"><use href="#i-copy" /></svg><span>Copy</span></button>
+            <button class="btn btn-ink" id="export-copy" type="button"><svg class="ic"><use href="#i-copy" /></svg><span>Copy</span></button>
           </div>
         </div>
       </div>
@@ -198,16 +213,17 @@
         <div class="panel-head">
           <span class="grabber"></span>
           <h2 id="history-title">Recent</h2>
-          <button class="icon-btn" type="button" id="history-clear" aria-label="Clear recent palettes" title="Clear"><svg class="ic"><use href="#i-trash" /></svg></button>
+          <button class="icon-btn" type="button" id="history-clear" aria-label="Clear recent palettes" data-tip="Clear recent palettes"><svg class="ic"><use href="#i-trash" /></svg></button>
           <button class="icon-btn" type="button" data-close aria-label="Close"><svg class="ic"><use href="#i-x" /></svg></button>
         </div>
         <div class="panel-body">
           <ul class="history" id="history-list"></ul>
-          <p class="empty" id="history-empty">Nothing here yet. Palettes you make land here, on this device only.</p>
+          <p class="empty" id="history-empty">Palettes you make are kept here, on this device only.</p>
         </div>
       </div>
     </dialog>
 
+    <div class="tip" id="tip" role="tooltip" aria-hidden="true"></div>
     <div class="toast-zone" aria-live="polite"><div class="toast" id="toast" role="status"></div></div>
     <noscript><p class="noscript">This one needs JavaScript to talk to The Color API.</p></noscript>
   </body>

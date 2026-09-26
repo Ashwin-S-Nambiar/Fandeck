@@ -5,15 +5,12 @@ import {
   FORMATS,
   formatColor,
   grade,
-  hexToRgb,
-  inkFor,
   localScheme,
   MODES,
   randomBase,
-  rgbToHex,
-  roles,
 } from './color.js';
 import { download, toCss, toJson, toPng, toTailwind } from './exporters.js';
+import { createPicker } from './picker.js';
 import { createSheet } from './sheet.js';
 import { setSound, sfx, soundOn } from './sound.js';
 import {
@@ -24,158 +21,152 @@ import {
   readHistory,
   save,
 } from './store.js';
+import { initTips } from './tip.js';
 
 const COUNT = 5;
 const APP = 'Color Scheme Generator';
+const THRESHOLDS = [3, 4.5, 7];
 const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 const EASE_OUT = 'cubic-bezier(0.23, 1, 0.32, 1)';
 
 const els = {
-  swatches: $('#swatches'),
+  chips: $('#chips'),
   stage: $('#stage'),
-  preview: $('#preview'),
-  mock: $('.mock'),
-  picker: $('#seed-picker'),
+  pairs: $('#pairs'),
+  pairsGrid: $('#pairs-grid'),
+  pairsSummary: $('#pairs-summary'),
+  threshold: $('#threshold'),
+  markBar: $$('#mark-bar i'),
+  seedBtn: $('#seed-btn'),
   hex: $('#seed-hex'),
-  seed: $('.seed'),
+  base: $('.base'),
   eyedropper: $('#eyedropper-btn'),
-  format: $('#format-btn'),
+  formats: $('#formats'),
   share: $('#share-btn'),
   exportBtn: $('#export-btn'),
   shuffle: $('#shuffle-btn'),
   modesList: $('.modes-list[role="radiogroup"]'),
   modesOn: $('.modes-on'),
-  view: $('#view-btn'),
+  views: $$('.view'),
   historyBtn: $('#history-btn'),
   sound: $('#sound-btn'),
-  theme: $('#theme-btn'),
   toast: $('#toast'),
-  glow: [...document.querySelectorAll('.glow i')],
 };
 
 const state = {
-  base: '7C3AED',
+  base: '2A9D8F',
   mode: load('csg:mode', 'analogic'),
   swatches: [],
   format: load('csg:format', 'hex'),
-  view: 'swatches',
+  threshold: load('csg:threshold', 4.5),
+  view: 'chips',
 };
 
 if (!MODES.some((m) => m.id === state.mode)) state.mode = 'analogic';
 if (!FORMATS.includes(state.format)) state.format = 'hex';
+if (!THRESHOLDS.includes(state.threshold)) state.threshold = 4.5;
 
+const tips = initTips($('#tip'));
 const undoStack = [];
 let committed = null;
 let controller = null;
 let pendingTimer = 0;
 let historyTimer = 0;
 let seedTimer = 0;
-let glowIndex = 0;
+let seedPending = false;
 
 function setTitle(section) {
   document.title = section ? `${section} · ${APP}` : APP;
 }
 
 function currentTitle() {
-  return state.view === 'preview' ? 'Preview' : '';
+  return state.view === 'pairs' ? 'Contrast' : '';
 }
 
-function mix(a, b, t) {
-  const x = hexToRgb(a);
-  const y = hexToRgb(b);
-  return rgbToHex({
-    r: x.r + (y.r - x.r) * t,
-    g: x.g + (y.g - x.g) * t,
-    b: x.b + (y.b - x.b) * t,
-  });
-}
-
-function rgba(hex, alpha) {
-  const { r, g, b } = hexToRgb(hex);
-  return `rgb(${r} ${g} ${b} / ${alpha})`;
-}
-
-function buildSwatches() {
+function buildChips() {
   const frag = document.createDocumentFragment();
   for (let i = 0; i < COUNT; i++) {
     const el = document.createElement('article');
-    el.className = 'swatch';
+    el.className = 'chip';
     el.dataset.i = i;
     el.innerHTML = `
-      <div class="fills"></div>
-      <button class="swatch-hit" type="button" data-sfx="none"></button>
-      <div class="sw-body">
-        <p class="sw-name">&nbsp;</p>
-        <p class="sw-value">&nbsp;</p>
-        <p class="sw-hex">&nbsp;</p>
-        <p class="sw-contrast">
-          <span class="cc on-white"><i></i><span></span></span>
-          <span class="cc on-black"><i></i><span></span></span>
-        </p>
+      <div class="field">
+        <div class="fills"></div>
+        <div class="samples" aria-hidden="true">
+          <span class="sample w"><b>Aa</b><span></span></span>
+          <span class="sample k"><b>Aa</b><span></span></span>
+        </div>
       </div>
-      <div class="sw-actions">
-        <button class="sw-btn sw-lock" type="button" aria-pressed="false" data-sfx="none">
-          <svg class="ic ic-a"><use href="#i-unlock" /></svg>
-          <svg class="ic ic-b"><use href="#i-lock" /></svg>
-        </button>
-        <button class="sw-btn sw-copy" type="button" data-sfx="none">
-          <svg class="ic ic-a"><use href="#i-copy" /></svg>
-          <svg class="ic ic-b"><use href="#i-check" /></svg>
-        </button>
+      <button class="chip-hit" type="button" data-sfx="none"></button>
+      <div class="label">
+        <span class="num">${String(i + 1).padStart(2, '0')}</span>
+        <p class="name">&nbsp;</p>
+        <p class="value">&nbsp;</p>
+        <p class="hexline">&nbsp;</p>
+        <span class="acts">
+          <button class="act lock" type="button" aria-pressed="false" data-sfx="none">
+            <svg class="ic ic-a"><use href="#i-unlock" /></svg>
+            <svg class="ic ic-b"><use href="#i-lock" /></svg>
+          </button>
+          <button class="act copy" type="button" data-sfx="none">
+            <svg class="ic ic-a"><use href="#i-copy" /></svg>
+            <svg class="ic ic-b"><use href="#i-check" /></svg>
+          </button>
+        </span>
       </div>`;
     frag.append(el);
   }
-  els.swatches.append(frag);
+  els.chips.append(frag);
 }
 
-function swatchEl(i) {
-  return els.swatches.children[i];
+function chipEl(i) {
+  return els.chips.children[i];
 }
 
-function writeSwatchText(el, sw) {
+function writeChipText(el, sw) {
   const value = formatColor(sw.hex, state.format);
-  $('.sw-name', el).textContent = sw.name || ' ';
-  $('.sw-value', el).textContent = value;
-  $('.sw-hex', el).textContent = `#${sw.hex}`;
+  $('.name', el).textContent = sw.name || ' ';
+  $('.value', el).textContent = value;
+  $('.hexline', el).textContent = `#${sw.hex}`;
   const w = contrast(sw.hex, 'FFFFFF');
   const k = contrast(sw.hex, '000000');
-  const white = $('.on-white', el);
-  const black = $('.on-black', el);
+  const white = $('.sample.w', el);
+  const black = $('.sample.k', el);
   $('span', white).textContent = `${w.toFixed(1)} ${grade(w)}`;
   $('span', black).textContent = `${k.toFixed(1)} ${grade(k)}`;
-  white.classList.toggle('low', w < 3);
-  black.classList.toggle('low', k < 3);
-  white.title = `White text on this color: ${w.toFixed(2)} to 1`;
-  black.title = `Black text on this color: ${k.toFixed(2)} to 1`;
+  white.classList.toggle('fail', w < 3);
+  black.classList.toggle('fail', k < 3);
   const label = sw.name ? `${sw.name}, ${value}` : value;
-  $('.swatch-hit', el).setAttribute('aria-label', `Copy ${label}`);
-  $('.sw-copy', el).setAttribute('aria-label', `Copy ${value}`);
-  $('.sw-lock', el).setAttribute(
+  $('.chip-hit', el).setAttribute(
+    'aria-label',
+    `Copy ${label}. White text ${w.toFixed(1)} to 1, black text ${k.toFixed(1)} to 1`,
+  );
+  $('.copy', el).setAttribute('aria-label', `Copy ${value}`);
+  const lock = $('.lock', el);
+  lock.setAttribute(
     'aria-label',
     sw.locked ? `Unlock ${value}` : `Lock ${value}`,
   );
+  lock.dataset.tip = sw.locked
+    ? 'Unlock so shuffle can change it'
+    : 'Keep this color when you shuffle';
+  tips.refresh(lock);
 }
 
-function setSwatchInk(el, hex) {
-  const ink = inkFor(hex);
-  el.style.setProperty('--sw-ink', `#${ink}`);
-  el.style.setProperty('--sw-chip', rgba(ink, ink === 'FFFFFF' ? 0.16 : 0.1));
-  el.style.setProperty('--sw-ring', rgba(ink, 0.32));
-}
-
-function paintSwatch(i, sw, { animate = true, delay = 0 } = {}) {
-  const el = swatchEl(i);
+function paintChip(i, sw, { animate = true, delay = 0 } = {}) {
+  const el = chipEl(i);
   const fills = $('.fills', el);
   const prevHex = el.dataset.hex;
   el.dataset.hex = sw.hex;
   el.toggleAttribute('data-locked', !!sw.locked);
-  const lock = $('.sw-lock', el);
+  const lock = $('.lock', el);
   lock.classList.toggle('alt', !!sw.locked);
   lock.setAttribute('aria-pressed', String(!!sw.locked));
 
   if (prevHex === sw.hex) {
-    writeSwatchText(el, sw);
+    writeChipText(el, sw);
     return;
   }
 
@@ -190,8 +181,7 @@ function paintSwatch(i, sw, { animate = true, delay = 0 } = {}) {
 
   if (!animate || !prevHex) {
     settle();
-    setSwatchInk(el, sw.hex);
-    writeSwatchText(el, sw);
+    writeChipText(el, sw);
     if (animate && !prevHex) {
       fill.animate([{ opacity: 0 }, { opacity: 1 }], {
         duration: 260,
@@ -214,48 +204,42 @@ function paintSwatch(i, sw, { animate = true, delay = 0 } = {}) {
 
   el.classList.add('swap');
   setTimeout(() => {
-    setSwatchInk(el, sw.hex);
-    writeSwatchText(el, sw);
+    writeChipText(el, sw);
     el.classList.remove('swap');
   }, delay + 90);
 }
 
 function renderAll(opts) {
   state.swatches.forEach((sw, i) => {
-    paintSwatch(i, sw, { ...opts, delay: (opts?.stagger ?? 0) * i });
+    paintChip(i, sw, { ...opts, delay: (opts?.stagger ?? 0) * i });
+  });
+}
+
+function paintMark() {
+  els.markBar.forEach((bar, i) => {
+    const sw = state.swatches[i];
+    bar.style.background = sw ? `#${sw.hex}` : '';
   });
 }
 
 function setPending(on) {
   clearTimeout(pendingTimer);
   if (!on) {
-    for (const el of els.swatches.children) el.classList.remove('pending');
+    for (const el of els.chips.children) el.classList.remove('pending');
     return;
   }
   pendingTimer = setTimeout(() => {
-    state.swatches.forEach((sw, i) => {
-      if (!sw.locked) swatchEl(i).classList.add('pending');
-    });
-    if (!state.swatches.length) {
-      for (const el of els.swatches.children) el.classList.add('pending');
+    for (const el of els.chips.children) {
+      const sw = state.swatches[Number(el.dataset.i)];
+      if (!sw?.locked) el.classList.add('pending');
     }
   }, 160);
 }
 
 function paintSeed() {
-  els.seed.style.setProperty('--seed', `#${state.base}`);
-  els.picker.value = `#${state.base.toLowerCase()}`;
+  els.base.style.setProperty('--seed', `#${state.base}`);
   if (document.activeElement !== els.hex) els.hex.value = `#${state.base}`;
   els.hex.removeAttribute('aria-invalid');
-}
-
-function paintGlow() {
-  const next = els.glow[glowIndex ^ 1];
-  const prev = els.glow[glowIndex];
-  next.style.setProperty('--c', `#${state.base}`);
-  next.classList.add('on');
-  prev.classList.remove('on');
-  glowIndex ^= 1;
 }
 
 function snapshot() {
@@ -289,9 +273,10 @@ function commit(next, { undoable = true, stagger = 28 } = {}) {
   state.swatches = next;
   committed = snapshot();
   renderAll({ animate: true, stagger: reduced() ? 0 : stagger });
+  paintMark();
   syncUrl();
   scheduleHistory();
-  applyPreview();
+  renderPairs();
   fillMissingNames();
 }
 
@@ -305,7 +290,7 @@ async function fillMissingNames() {
         state.swatches.forEach((sw, i) => {
           if (sw.hex === s.hex && !sw.name) {
             sw.name = name;
-            writeSwatchText(swatchEl(i), sw);
+            writeChipText(chipEl(i), sw);
           }
         });
       } catch {}
@@ -315,6 +300,7 @@ async function fillMissingNames() {
 }
 
 async function generate() {
+  seedPending = false;
   controller?.abort();
   const ctrl = new AbortController();
   controller = ctrl;
@@ -343,7 +329,10 @@ async function generate() {
   commit(next);
   if (offline) {
     sfx.error();
-    toast("Can't reach The Color API. Mixed these locally.", {
+    toast({
+      tone: 'warn',
+      eyebrow: 'Offline',
+      text: "The Color API didn't answer. Mixed locally, without names.",
       action: { label: 'Retry', run: generate },
     });
   }
@@ -352,11 +341,23 @@ async function generate() {
 function setBase(hex, { regen = true, debounce = 0 } = {}) {
   state.base = hex;
   paintSeed();
-  paintGlow();
   clearTimeout(seedTimer);
+  seedPending = false;
   if (!regen) return;
-  if (debounce) seedTimer = setTimeout(generate, debounce);
-  else generate();
+  if (debounce) {
+    seedPending = true;
+    seedTimer = setTimeout(generate, debounce);
+  } else generate();
+}
+
+function flushBase(hex) {
+  if (hex !== state.base) {
+    setBase(hex);
+  } else if (seedPending) {
+    clearTimeout(seedTimer);
+    seedPending = false;
+    generate();
+  }
 }
 
 function setMode(mode, { regen = true } = {}) {
@@ -398,31 +399,51 @@ function paintModes(instant) {
   placeIndicator(instant);
 }
 
-function paintFormat() {
-  els.format.textContent = state.format.toUpperCase();
-  els.format.setAttribute(
-    'aria-label',
-    `Color format: ${state.format.toUpperCase()}. Change format`,
-  );
+function paintRadios(group, attr, value) {
+  for (const b of group.querySelectorAll(`[${attr}]`)) {
+    const on = b.getAttribute(attr) === String(value);
+    b.setAttribute('aria-checked', String(on));
+    b.tabIndex = on ? 0 : -1;
+  }
+}
+
+function setFormat(format) {
+  state.format = format;
+  save('csg:format', format);
+  paintRadios(els.formats, 'data-format', format);
+  state.swatches.forEach((sw, i) => {
+    writeChipText(chipEl(i), sw);
+  });
 }
 
 let toastTimer = 0;
-function toast(message, { hex, action } = {}) {
+function toast({ eyebrow, text, hex, tone, mono, action }) {
   const t = els.toast;
   t.replaceChildren();
+  const mark = document.createElement('span');
+  mark.className = 'toast-mark';
   if (hex) {
-    const dot = document.createElement('span');
-    dot.className = 'toast-dot';
-    dot.style.background = `#${hex}`;
-    t.append(dot);
+    mark.style.background = `#${hex}`;
+  } else {
+    mark.innerHTML = `<svg class="ic"><use href="#i-${tone === 'warn' ? 'warn' : 'check'}" /></svg>`;
   }
-  const text = document.createElement('span');
-  text.className = 'toast-text';
-  text.textContent = message;
-  t.append(text);
+  const body = document.createElement('span');
+  body.className = 'toast-body';
+  if (eyebrow) {
+    const e = document.createElement('span');
+    e.className = 'toast-eyebrow';
+    e.textContent = eyebrow;
+    body.append(e);
+  }
+  const line = document.createElement('span');
+  line.className = mono ? 'toast-text mono' : 'toast-text';
+  line.textContent = text;
+  body.append(line);
+  t.append(mark, body);
   if (action) {
     const b = document.createElement('button');
     b.type = 'button';
+    b.className = 'toast-action';
     b.textContent = action.label;
     b.addEventListener('click', () => {
       t.classList.remove('show');
@@ -463,13 +484,22 @@ async function copySwatch(i) {
   const value = formatColor(sw.hex, state.format);
   if (!(await copyText(value))) {
     sfx.error();
-    toast("Couldn't copy that. Try again?");
+    toast({
+      tone: 'warn',
+      eyebrow: 'Not copied',
+      text: 'The browser blocked the clipboard.',
+    });
     return;
   }
   sfx.copy();
   haptic(10);
-  toast(`Copied ${value}`, { hex: sw.hex });
-  const btn = $('.sw-copy', swatchEl(i));
+  toast({
+    eyebrow: sw.name ? `Copied · ${sw.name}` : 'Copied',
+    text: value,
+    hex: sw.hex,
+    mono: true,
+  });
+  const btn = $('.copy', chipEl(i));
   btn.classList.add('alt');
   clearTimeout(btn._t);
   btn._t = setTimeout(() => btn.classList.remove('alt'), 1200);
@@ -481,13 +511,17 @@ function toggleLock(i) {
   sw.locked = !sw.locked;
   sfx.lock(sw.locked);
   haptic(6);
-  paintSwatch(i, sw);
+  paintChip(i, sw);
 }
 
 function shuffle() {
   if (state.swatches.length && state.swatches.every((s) => s.locked)) {
     sfx.error();
-    toast('Everything is locked. Unlock one to shuffle.');
+    toast({
+      tone: 'warn',
+      eyebrow: 'All locked',
+      text: 'Unlock a chip to shuffle it.',
+    });
     return;
   }
   sfx.shuffle();
@@ -505,7 +539,7 @@ function shuffle() {
 function undo() {
   const prev = undoStack.pop();
   if (!prev) {
-    toast('Nothing to undo.');
+    toast({ eyebrow: 'Undo', text: 'Nothing to undo.' });
     return;
   }
   controller?.abort();
@@ -515,10 +549,9 @@ function undo() {
   state.mode = prev.mode;
   save('csg:mode', prev.mode);
   paintSeed();
-  paintGlow();
   paintModes();
   commit(prev.swatches, { undoable: false });
-  toast('Undone.');
+  toast({ eyebrow: 'Undo', text: 'Back to the previous palette.' });
 }
 
 function restore(entry) {
@@ -528,90 +561,105 @@ function restore(entry) {
   state.base = entry.base;
   if (MODES.some((m) => m.id === entry.mode)) state.mode = entry.mode;
   paintSeed();
-  paintGlow();
   paintModes();
   for (const s of entry.swatches) rememberName(s.hex, s.name);
   commit(entry.swatches.map((s) => ({ ...s, locked: false })));
 }
 
-function applyPreview() {
+function pairItems() {
+  return [
+    ...state.swatches.map((s) => ({ hex: s.hex, name: s.name })),
+    { hex: 'FFFFFF', name: 'White' },
+    { hex: '000000', name: 'Black' },
+  ];
+}
+
+function renderPairs() {
   if (!state.swatches.length) return;
-  const hexes = state.swatches.map((s) => s.hex);
-  const r = roles(hexes);
-  const dark = document.documentElement.dataset.theme === 'dark';
-  const page = dark
-    ? mix(r.darkest, '0B0B0C', 0.55)
-    : mix(r.lightest, 'FAFAF9', 0.6);
-  const surface = dark
-    ? mix(r.darkest, '19191B', 0.72)
-    : mix(r.lightest, 'FFFFFF', 0.86);
-  const ink = dark
-    ? contrast(r.lightest, surface) >= 7
-      ? r.lightest
-      : 'F4F4F5'
-    : contrast(r.darkest, surface) >= 7
-      ? r.darkest
-      : '1C1B1A';
-  const muted =
-    contrast(mix(ink, surface, 0.35), surface) >= 4.5
-      ? mix(ink, surface, 0.35)
-      : ink;
-  const chip = mix(r.secondary, surface, dark ? 0.7 : 0.78);
-  const chipInk = contrast(ink, chip) >= 4.5 ? ink : inkFor(chip);
-  const vars = {
-    '--p-page': page,
-    '--p-surface': surface,
-    '--p-ink': ink,
-    '--p-muted': muted,
-    '--p-primary': r.primary,
-    '--p-on-primary': inkFor(r.primary),
-    '--p-chip': chip,
-    '--p-chip-ink': chipInk,
-  };
-  hexes.forEach((h, i) => {
-    vars[`--p-c${i + 1}`] = h;
-  });
-  for (const [k, v] of Object.entries(vars)) {
-    els.mock.style.setProperty(k, `#${v}`);
+  const items = pairItems();
+  const grid = els.pairsGrid;
+  const frag = document.createDocumentFragment();
+  let pass = 0;
+  let total = 0;
+  for (const fg of items) {
+    const r = document.createElement('span');
+    r.className = 'pair-row';
+    r.style.background = `#${fg.hex}`;
+    frag.append(r);
+    for (const bg of items) {
+      const cell = document.createElement('button');
+      cell.type = 'button';
+      cell.className = 'pair';
+      cell.dataset.sfx = 'none';
+      cell.style.background = `#${bg.hex}`;
+      cell.style.color = `#${fg.hex}`;
+      if (fg.hex === bg.hex) {
+        cell.classList.add('same');
+        cell.tabIndex = -1;
+        cell.setAttribute('aria-hidden', 'true');
+      } else {
+        const ratio = contrast(fg.hex, bg.hex);
+        const ok = ratio >= state.threshold;
+        total++;
+        if (ok) pass++;
+        cell.classList.toggle('fail', !ok);
+        cell.dataset.fg = fg.hex;
+        cell.dataset.bg = bg.hex;
+        cell.innerHTML = `<b>Aa</b><span>${ratio.toFixed(1)}</span>`;
+        cell.setAttribute(
+          'aria-label',
+          `${fg.name || `#${fg.hex}`} on ${bg.name || `#${bg.hex}`}: ${ratio.toFixed(2)} to 1, ${ok ? 'passes' : 'fails'}. Copy as CSS`,
+        );
+      }
+      frag.append(cell);
+    }
+  }
+  grid.replaceChildren(frag);
+  const label = { 3: 'AA large', 4.5: 'AA', 7: 'AAA' }[state.threshold];
+  els.pairsSummary.textContent = `Rows are text, columns are backgrounds. ${pass} of ${total} pairs pass ${label}.`;
+}
+
+function setThreshold(th) {
+  state.threshold = th;
+  save('csg:threshold', th);
+  paintRadios(els.threshold, 'data-th', th);
+  renderPairs();
+}
+
+async function copyPair(cell) {
+  const { fg, bg } = cell.dataset;
+  if (!fg) return;
+  const css = `color: ${formatColor(fg, state.format)};\nbackground-color: ${formatColor(bg, state.format)};`;
+  if (await copyText(css)) {
+    sfx.copy();
+    haptic(10);
+    toast({
+      eyebrow: `Copied · ${contrast(fg, bg).toFixed(1)} to 1`,
+      text: `#${fg} on #${bg}`,
+      hex: bg,
+      mono: true,
+    });
   }
 }
 
 function setView(view) {
   state.view = view;
-  const preview = view === 'preview';
+  const pairs = view === 'pairs';
   els.stage.dataset.view = view;
-  els.preview.hidden = !preview;
-  els.view.classList.toggle('alt', preview);
-  els.view.setAttribute('aria-pressed', String(preview));
-  els.view.setAttribute(
-    'aria-label',
-    preview ? 'Show swatches' : 'Show UI preview',
-  );
-  els.view.title = preview ? 'Swatches (P)' : 'UI preview (P)';
+  els.chips.hidden = pairs;
+  els.pairs.hidden = !pairs;
+  for (const b of els.views) {
+    b.setAttribute('aria-pressed', String(b.dataset.view === view));
+  }
   setTitle(currentTitle());
-  if (preview && !reduced()) {
-    els.preview.animate(
+  if (!reduced()) {
+    (pairs ? els.pairs : els.chips).animate(
       [
-        { opacity: 0, transform: 'translateY(6px)' },
+        { opacity: 0, transform: 'translateY(4px)' },
         { opacity: 1, transform: 'none' },
       ],
-      { duration: 220, easing: EASE_OUT },
+      { duration: 200, easing: EASE_OUT },
     );
-  }
-}
-
-function setTheme(theme) {
-  const apply = () => {
-    document.documentElement.dataset.theme = theme;
-    $('meta[name="theme-color"]').content =
-      theme === 'dark' ? '#0b0b0c' : '#fafaf9';
-    applyPreview();
-  };
-  save('csg:theme', theme);
-  if (document.startViewTransition && !reduced()) {
-    document.startViewTransition(apply);
-  } else {
-    apply();
   }
 }
 
@@ -620,6 +668,8 @@ function paintSound() {
   els.sound.classList.toggle('alt', !on);
   els.sound.setAttribute('aria-pressed', String(on));
   els.sound.setAttribute('aria-label', on ? 'Mute sounds' : 'Turn sounds on');
+  els.sound.dataset.tip = on ? 'Mute sounds' : 'Turn sounds on';
+  tips.refresh(els.sound);
 }
 
 function shareUrl() {
@@ -645,10 +695,14 @@ async function share() {
   }
   if (await copyText(url)) {
     sfx.copy();
-    toast('Link copied. It opens this exact palette.');
+    toast({ eyebrow: 'Link copied', text: 'It opens this exact palette.' });
   } else {
     sfx.error();
-    toast("Couldn't copy the link.");
+    toast({
+      tone: 'warn',
+      eyebrow: 'Not copied',
+      text: 'The browser blocked the clipboard.',
+    });
   }
 }
 
@@ -659,16 +713,14 @@ const exportEls = {
   note: $('#export-note'),
   copy: $('#export-copy'),
   download: $('#export-download'),
-  tabs: [...document.querySelectorAll('.tabs [role="tab"]')],
+  tabs: $$('.tabs [role="tab"]'),
 };
 
 const NOTES = {
   css: () =>
-    `Custom properties in ${state.format.toUpperCase()}. The format button in the dock changes it.`,
-  tailwind: () =>
-    'Drop this into your main CSS file, below @import "tailwindcss".',
-  json: () =>
-    'Names plus every format, ready for a script or a design token tool.',
+    `Custom properties in ${state.format.toUpperCase()}. Change it under Copy as.`,
+  tailwind: () => 'Paste into your main CSS file, below @import "tailwindcss".',
+  json: () => 'Names plus every format, for scripts and token tools.',
   png: () => '1600 by 900, with the name and hex on each color.',
 };
 
@@ -738,6 +790,13 @@ async function renderExport() {
   }
 }
 
+const EXPORT_NAMES = {
+  css: 'CSS',
+  tailwind: 'Tailwind theme',
+  json: 'JSON',
+  png: 'Image',
+};
+
 async function exportCopy() {
   if (exportState.tab === 'png') {
     try {
@@ -746,17 +805,24 @@ async function exportCopy() {
         new ClipboardItem({ 'image/png': exportState.png }),
       ]);
       sfx.copy();
-      toast('Image copied.');
+      toast({ eyebrow: 'Copied', text: 'Image copied.' });
     } catch {
       sfx.error();
-      toast("This browser won't copy images. Download it instead.");
+      toast({
+        tone: 'warn',
+        eyebrow: 'Not copied',
+        text: "This browser can't copy images. Download it instead.",
+      });
     }
     return;
   }
   if (await copyText(exportText(exportState.tab))) {
     sfx.copy();
     haptic(10);
-    toast('Copied.');
+    toast({
+      eyebrow: 'Copied',
+      text: `${EXPORT_NAMES[exportState.tab]} copied.`,
+    });
   }
 }
 
@@ -844,22 +910,33 @@ function isTyping(el) {
   );
 }
 
+function radioKeys(group, attr, values, apply) {
+  group.addEventListener('keydown', (e) => {
+    const d = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[
+      e.key
+    ];
+    if (!d) return;
+    e.preventDefault();
+    const current = group.querySelector('[aria-checked="true"]');
+    const i = values.indexOf(current?.getAttribute(attr));
+    const next = values[(i + d + values.length) % values.length];
+    apply(next);
+    group.querySelector(`[${attr}="${next}"]`)?.focus();
+  });
+}
+
 function bind() {
-  els.swatches.addEventListener('click', (e) => {
-    const sw = e.target.closest('.swatch');
-    if (!sw) return;
-    const i = Number(sw.dataset.i);
-    if (e.target.closest('.sw-lock')) toggleLock(i);
-    else if (e.target.closest('.sw-copy, .swatch-hit')) copySwatch(i);
+  els.chips.addEventListener('click', (e) => {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    const i = Number(chip.dataset.i);
+    if (e.target.closest('.lock')) toggleLock(i);
+    else if (e.target.closest('.copy, .chip-hit')) copySwatch(i);
   });
 
-  els.picker.addEventListener('input', () => {
-    const hex = cleanHex(els.picker.value);
-    if (hex) setBase(hex, { debounce: 260 });
-  });
-  els.picker.addEventListener('change', () => {
-    const hex = cleanHex(els.picker.value);
-    if (hex && (hex !== state.base || seedTimer)) setBase(hex);
+  els.pairsGrid.addEventListener('click', (e) => {
+    const cell = e.target.closest('.pair');
+    if (cell) copyPair(cell);
   });
 
   els.hex.addEventListener('input', () => {
@@ -906,26 +983,31 @@ function bind() {
     const b = e.target.closest('[data-mode]');
     if (b) setMode(b.dataset.mode);
   });
-  els.modesList.addEventListener('keydown', (e) => {
-    const keys = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
-    if (!(e.key in keys)) return;
-    e.preventDefault();
-    const i = MODES.findIndex((m) => m.id === state.mode);
-    const next = MODES[(i + keys[e.key] + MODES.length) % MODES.length];
-    setMode(next.id);
-    els.modesList.querySelector(`[data-mode="${next.id}"]`).focus();
-  });
+  radioKeys(
+    els.modesList,
+    'data-mode',
+    MODES.map((m) => m.id),
+    setMode,
+  );
   new ResizeObserver(() => placeIndicator(true)).observe(els.modesList);
 
-  els.format.addEventListener('click', () => {
-    state.format =
-      FORMATS[(FORMATS.indexOf(state.format) + 1) % FORMATS.length];
-    save('csg:format', state.format);
-    paintFormat();
-    state.swatches.forEach((sw, i) => {
-      writeSwatchText(swatchEl(i), sw);
-    });
+  els.formats.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-format]');
+    if (b) setFormat(b.dataset.format);
   });
+  radioKeys(els.formats, 'data-format', FORMATS, setFormat);
+
+  els.threshold.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-th]');
+    if (b) setThreshold(Number(b.dataset.th));
+  });
+  radioKeys(els.threshold, 'data-th', THRESHOLDS.map(String), (v) =>
+    setThreshold(Number(v)),
+  );
+
+  for (const b of els.views) {
+    b.addEventListener('click', () => setView(b.dataset.view));
+  }
 
   els.shuffle.addEventListener('click', shuffle);
   els.share.addEventListener('click', share);
@@ -961,21 +1043,13 @@ function bind() {
   $('#history-clear').addEventListener('click', () => {
     clearHistory();
     renderHistory();
-    toast('Cleared.');
+    toast({ eyebrow: 'Recent', text: 'Cleared.' });
   });
 
-  els.view.addEventListener('click', () =>
-    setView(state.view === 'preview' ? 'swatches' : 'preview'),
-  );
   els.sound.addEventListener('click', () => {
     setSound(!soundOn());
     paintSound();
     sfx.tap();
-  });
-  els.theme.addEventListener('click', () => {
-    setTheme(
-      document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark',
-    );
   });
 
   document.addEventListener(
@@ -989,6 +1063,7 @@ function bind() {
 
   document.addEventListener('keydown', (e) => {
     if (anySheetOpen() || isTyping(document.activeElement)) return;
+    if (e.target.closest?.('#picker')) return;
     const mod = e.metaKey || e.ctrlKey;
     if (mod && e.key.toLowerCase() === 'z' && !e.shiftKey) {
       e.preventDefault();
@@ -999,19 +1074,11 @@ function bind() {
     if (e.code === 'Space') {
       e.preventDefault();
       shuffle();
-    } else if (e.key === 'f' || e.key === 'F') {
-      els.format.click();
     } else if (e.key === 'p' || e.key === 'P') {
-      els.view.click();
+      setView(state.view === 'pairs' ? 'chips' : 'pairs');
     } else if (/^[1-5]$/.test(e.key)) {
       copySwatch(Number(e.key) - 1);
     }
-  });
-
-  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    if (load('csg:theme', null)) return;
-    document.documentElement.dataset.theme = e.matches ? 'dark' : 'light';
-    applyPreview();
   });
 }
 
@@ -1034,11 +1101,29 @@ function fromUrl() {
 }
 
 function init() {
-  buildSwatches();
+  buildChips();
   paintModes(true);
-  paintFormat();
+  paintRadios(els.formats, 'data-format', state.format);
+  paintRadios(els.threshold, 'data-th', state.threshold);
   paintSound();
   bind();
+
+  createPicker({
+    root: $('#picker'),
+    trigger: els.seedBtn,
+    bar: $('#bar'),
+    getBase: () => state.base,
+    getPalette: () => state.swatches.map((s) => s.hex),
+    getRecent: () =>
+      [...new Set(readHistory().map((e) => e.base))]
+        .filter((h) => h !== state.base)
+        .slice(0, 8),
+    fetchName,
+    onChange: (hex, { commit }) => {
+      if (commit) flushBase(hex);
+      else if (hex !== state.base) setBase(hex, { debounce: 240 });
+    },
+  });
 
   const shared = fromUrl();
   const last = readHistory()[0];
@@ -1048,7 +1133,6 @@ function init() {
     if (MODES.some((m) => m.id === start.mode)) state.mode = start.mode;
     paintModes(true);
     paintSeed();
-    paintGlow();
     for (const s of start.swatches) rememberName(s.hex, s.name);
     commit(
       start.swatches.map((s) => ({ ...s, locked: false })),
@@ -1057,7 +1141,6 @@ function init() {
   } else {
     state.base = randomBase();
     paintSeed();
-    paintGlow();
     generate();
   }
 }
