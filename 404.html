@@ -3,90 +3,85 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#fafaf9" />
+    <meta name="theme-color" content="#f0f0ef" />
     <meta name="robots" content="noindex" />
     <title>Not found · Color Scheme Generator</title>
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="preload" href="/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/geist-mono-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <script>
-      (() => {
-        let t = null;
-        try {
-          t = JSON.parse(localStorage.getItem('csg:theme'));
-        } catch {}
-        const dark = t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-        document.querySelector('meta[name="theme-color"]').content = dark ? '#0b0b0c' : '#fafaf9';
-      })();
-    </script>
+    <link rel="preload" href="/fonts/hanken-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/fragment-mono-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/index.css" />
     <style>
       .lost {
         display: grid;
         align-content: center;
         justify-items: center;
-        gap: 20px;
+        gap: 22px;
         min-height: 0;
-        padding: 16px 0;
+        padding: 12px 0;
         text-align: center;
+        color: var(--on-page);
       }
 
-      .lost-strip {
+      .book {
         display: grid;
         grid-template-columns: repeat(5, minmax(0, 1fr));
-        gap: 6px;
-        width: min(420px, 100%);
-        height: clamp(96px, 22dvh, 180px);
+        gap: 8px;
+        width: min(460px, 100%);
+        height: clamp(120px, 26dvh, 210px);
       }
 
-      .lost-strip i {
-        border-radius: 16px;
-        box-shadow: inset 0 0 0 1px var(--line);
+      .book span {
+        display: grid;
+        grid-template-rows: 1fr auto;
+        border-radius: 3px;
+        overflow: hidden;
+        background: var(--card);
+        box-shadow: var(--edge);
       }
 
-      .lost-strip i:nth-child(1) {
-        background: oklch(0.86 0.004 90);
+      .book span i {
+        display: block;
       }
 
-      .lost-strip i:nth-child(2) {
-        background: oklch(0.72 0.005 90);
+      .book span b {
+        padding: 5px 6px 6px;
+        font-family: var(--mono);
+        font-size: 10px;
+        font-weight: 500;
+        color: var(--ink-2);
+        text-align: left;
+        border-top: 1px solid rgb(0 0 0 / 0.07);
       }
 
-      .lost-strip i:nth-child(3) {
+      .book .gone {
         background: transparent;
         box-shadow: none;
-        border: 2px dashed var(--line-2);
+        border: 1.5px dashed var(--on-page-rule);
       }
 
-      .lost-strip i:nth-child(4) {
-        background: oklch(0.52 0.006 90);
-      }
-
-      .lost-strip i:nth-child(5) {
-        background: oklch(0.34 0.006 90);
+      .book .gone b {
+        border: 0;
+        color: var(--on-page-2);
       }
 
       .lost-code {
-        font-family: var(--font-mono);
         font-size: 13px;
-        font-weight: 600;
-        color: var(--muted);
-        letter-spacing: 0.04em;
+        font-weight: 550;
+        color: var(--on-page-2);
       }
 
       .lost h1 {
-        font-size: clamp(26px, 6vw, 40px);
+        font-size: clamp(26px, 5.5vw, 40px);
         font-weight: 700;
-        letter-spacing: -0.03em;
-        line-height: 1.1;
-        max-width: 18ch;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+        max-width: 16ch;
+        text-wrap: balance;
       }
 
       .lost p {
-        color: var(--muted);
+        color: var(--on-page-2);
         max-width: 34ch;
       }
 
@@ -95,7 +90,7 @@
         padding: 0 18px;
       }
 
-      .lost .btn .btn-label {
+      .lost .btn span {
         display: inline;
       }
 
@@ -104,7 +99,7 @@
           gap: 12px;
         }
 
-        .lost-strip {
+        .book {
           display: none;
         }
       }
@@ -119,19 +114,25 @@
   <body>
     <div class="app" style="grid-template-rows: auto minmax(0, 1fr) auto">
       <header class="top">
-        <a class="brand" href="/">
-          <img src="/icon.svg" width="28" height="28" alt="" />
-          <span>Color Scheme Generator</span>
+        <a class="mark" href="/" aria-label="Color Scheme Generator, home">
+          <span class="mark-bar" aria-hidden="true"><i style="background: #d9d9d7"></i><i style="background: #b3b3b0"></i><i style="background: transparent"></i><i style="background: #6b6b69"></i><i style="background: #3d3d3c"></i></span>
+          <span class="mark-name">Color Scheme Generator</span>
         </a>
       </header>
       <main class="lost">
-        <div class="lost-strip" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-        <span class="lost-code">#404040 · NOT FOUND</span>
-        <h1>This page fell off the color wheel.</h1>
-        <p>The link might be old, or it never existed. The palette is still where you left it.</p>
-        <a class="btn btn-primary" href="/">
-          <svg class="ic" viewBox="0 0 256 256"><path d="M228,128a12,12,0,0,1-12,12H69l51.52,51.51a12,12,0,0,1-17,17l-72-72a12,12,0,0,1,0-17l72-72a12,12,0,0,1,17,17L69,116H216A12,12,0,0,1,228,128Z"/></svg>
-          <span class="btn-label">Back to the palette</span>
+        <div class="book" aria-hidden="true">
+          <span><i style="background: #d9d9d7"></i><b>#D9D9D7</b></span>
+          <span><i style="background: #b3b3b0"></i><b>#B3B3B0</b></span>
+          <span class="gone"><i></i><b>404</b></span>
+          <span><i style="background: #6b6b69"></i><b>#6B6B69</b></span>
+          <span><i style="background: #3d3d3c"></i><b>#3D3D3C</b></span>
+        </div>
+        <span class="lost-code">Error 404 · Page not found</span>
+        <h1>This page isn't in the swatch book.</h1>
+        <p>The link might be old or mistyped. Your palette is where you left it.</p>
+        <a class="btn btn-ink" href="/">
+          <svg class="ic" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z" /></svg>
+          <span>Back to the palette</span>
         </a>
       </main>
       <footer class="foot">

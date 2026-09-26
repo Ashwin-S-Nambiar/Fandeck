@@ -42,10 +42,10 @@ export async function toPng(swatches, { width = 1600, height = 900 } = {}) {
     const ink = `#${inkFor(s.hex)}`;
     g.fillStyle = ink;
     g.globalAlpha = 0.72;
-    g.font = '500 26px Geist, "Geist Fallback", sans-serif';
+    g.font = '500 26px "Hanken Grotesk", "Hanken Grotesk Fallback", sans-serif';
     g.fillText(s.name || '', x + 36, height - 96, w - 64);
     g.globalAlpha = 1;
-    g.font = '600 40px "Geist Mono", "Geist Mono Fallback", monospace';
+    g.font = '400 40px "Fragment Mono", "Fragment Mono Fallback", monospace';
     g.fillText(`#${s.hex}`, x + 36, height - 44, w - 64);
   });
   return new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
