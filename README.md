@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://fandeck.ashwin.co.in">
-    <img src="./assets/readme/hero.svg" width="100%" alt="Fandeck: one color in, five out. five paint chips with live white and black text samples, the middle one locked, beside a hue wheel with each color plotted by its oklch hue and chroma">
+    <img src="./docs/screenshots/Fandeck.webp" width="100%" alt="the app on desktop: five paint chips named blue dianne, jungle green, rob roy, sandy brown and burnt sienna, each with white and black aa samples on the color and a white label with its number, name and hex, above a ruled bar with the base color, all eight harmonies, copy as, share, export and shuffle">
   </a>
 </p>
 
@@ -9,16 +9,12 @@
   &nbsp;·&nbsp;
   <a href="#what-it-does">what it does</a>
   &nbsp;·&nbsp;
-  <a href="#one-request-five-colors">how it gets colors</a>
+  <a href="#the-design">the design</a>
   &nbsp;·&nbsp;
   <a href="#running-it">running it</a>
 </p>
 
 <br>
-
-<p align="center">
-  <img src="./docs/screenshots/Fandeck.webp" width="100%" alt="the app on desktop: five paint chips named blue dianne, jungle green, rob roy, sandy brown and burnt sienna, each with white and black aa samples on the color and a white label with its number, name and hex, above a ruled bar with the base color, all eight harmonies, copy as, share, export and shuffle">
-</p>
 
 the source of **[fandeck.ashwin.co.in](https://fandeck.ashwin.co.in)**, named after the fan of paint chips you flip through in a paint store. pick one color, pick a harmony, and get five that work together. lock the ones you like, shuffle the rest, check which pairs are readable, and take the lot away as css, tailwind, json or a png.
 
@@ -112,6 +108,10 @@ python3 -m http.server 5173   # or: npx serve
 ```
 
 then open http://localhost:5173.
+
+### hosting and indexing
+
+production indexing is configured for `fandeck.ashwin.co.in`; vercel sends `noindex, nofollow` on other hosts, including preview deployments. `robots.txt` points to the homepage sitemap in `sitemap.xml`; shared palettes use the homepage canonical. if you deploy under another domain, update the indexing headers and site urls along with it.
 
 ## the shape of it
 
