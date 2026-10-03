@@ -22,6 +22,7 @@ import {
   save,
 } from './store.js';
 import { initTips } from './tip.js';
+import { paletteImage, sharedPalette } from './share.js';
 
 const COUNT = 5;
 const APP = 'Fandeck';
@@ -257,6 +258,10 @@ function syncUrl() {
   params.set('m', state.mode);
   params.set('b', state.base);
   history.replaceState(null, '', `${location.pathname}?${params}`);
+  const image = paletteImage(sharedPalette(params));
+  document.querySelector('meta[property="og:image"]').content = image;
+  document.querySelector('meta[name="twitter:image"]').content = image;
+  document.querySelector('meta[property="og:image:type"]').content = 'image/png';
 }
 
 function scheduleHistory() {
