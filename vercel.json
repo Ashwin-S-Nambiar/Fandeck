@@ -24,5 +24,48 @@
         }
       ]
     }
-  ]
+  ],
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": null,
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "c"
+        },
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(.*([Bb]ot|[Cc]rawler|facebookexternalhit|WhatsApp|[Pp]review|[Ee]mbedly|[Ii]framely).*)"
+        }
+      ],
+      "destination": "/api/share"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "palette"
+        },
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(.*([Bb]ot|[Cc]rawler|facebookexternalhit|WhatsApp|[Pp]review|[Ee]mbedly|[Ii]framely).*)"
+        }
+      ],
+      "destination": "/api/share"
+    }
+  ],
+  "functions": {
+    "api/share.js": {
+      "includeFiles": "dist/index.html"
+    },
+    "api/og.js": {
+      "includeFiles": "{server/fonts/*.{ttf,txt},icon.svg,node_modules/@vercel/og/dist/*.{wasm,ttf}}"
+    }
+  }
 }
