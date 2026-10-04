@@ -18,7 +18,7 @@
 
 the source of **[fandeck.ashwin.co.in](https://fandeck.ashwin.co.in)**, named after the fan of paint chips you flip through in a paint store. pick one color, pick a harmony, and get five that work together. lock the ones you like, shuffle the rest, check which pairs are readable, and take the lot away as css, tailwind, json or a png.
 
-it is one html file, one stylesheet and eight small modules. no framework, no build step, no dependencies. the palettes and their names come from [the color api](https://www.thecolorapi.com/); everything else, the conversions, the contrast maths and the exports, happens in the browser.
+the app is one html file, one stylesheet and ten small modules, loaded straight by the browser with no framework or bundler. the palettes and their names come from [the color api](https://www.thecolorapi.com/); the conversions, contrast maths and exports happen in the browser. vercel functions provide metadata and generated preview images for shared palettes, using react and `@vercel/og` on the server.
 
 ## what it does
 
@@ -90,16 +90,17 @@ it is laid out like a paint chip, because that is what a palette is when it is n
 | layer | choices |
 | --- | --- |
 | markup and style | plain html and css, with container queries and `:has()` |
-| script | eight es modules in [`js/`](js), loaded straight by the browser |
+| script | ten es modules in [`js/`](js), loaded straight by the browser |
 | motion | css transitions and the web animations api |
 | data | [the color api](https://www.thecolorapi.com/) for schemes and names |
 | type | [hanken grotesk](https://fonts.google.com/specimen/Hanken+Grotesk) and [fragment mono](https://fonts.google.com/specimen/Fragment+Mono), self-hosted |
 | icons | [phosphor](https://phosphoricons.com), regular weight, inlined as an svg sprite |
-| hosting | [vercel](https://vercel.com/), as static files |
+| share previews | react and `@vercel/og` in vercel functions, with cached images for each shared palette |
+| hosting | [vercel](https://vercel.com/), with a static app and server functions for previews |
 
 ## running it
 
-there is nothing to install. the modules need to be served rather than opened as a file, so any static server works:
+the browser app needs no installation. the modules need to be served rather than opened as a file, so any static server works:
 
 ```sh
 git clone https://github.com/Ashwin-S-Nambiar/Fandeck.git
@@ -108,6 +109,8 @@ python3 -m http.server 5173   # or: npx serve
 ```
 
 then open http://localhost:5173.
+
+for deployment with shared palette previews, use node 24.x, run `npm install` and `npm run build`, then deploy to vercel. the build copies the static app into `dist`; the preview dependencies and fonts run on the server.
 
 ### hosting and indexing
 
@@ -128,6 +131,11 @@ js/
   sheet.js      the export and recent sheets, with drag to dismiss
   sound.js      web audio ticks
   store.js      localStorage, history and haptics
+  tip.js        tooltips for icon buttons
+  share.js      shared palette URLs and metadata
+api/            crawler metadata and generated palette preview images
+server/         preview rendering, cache keys and runtime fonts
+scripts/        static build and preview font preparation
 fonts/          hanken grotesk and fragment mono, latin and latin-ext
 ```
 
