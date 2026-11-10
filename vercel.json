@@ -63,10 +63,12 @@
   ],
   "functions": {
     "api/share.js": {
-      "includeFiles": "dist/index.html"
+      "includeFiles": "dist/index.html",
+      "installCommand": "env -u NPM_CONFIG_CACHE_DIR -u npm_config_cache_dir npm install"
     },
     "api/og.js": {
-      "includeFiles": "{server/fonts/*.{ttf,txt},icon.svg,node_modules/@vercel/og/dist/*.{wasm,ttf}}"
+      "includeFiles": "{server/fonts/*.{ttf,txt},icon.svg,node_modules/@vercel/og/dist/*.{wasm,ttf}}",
+      "installCommand": "env -u NPM_CONFIG_CACHE_DIR -u npm_config_cache_dir npm install"
     }
   }
 }
